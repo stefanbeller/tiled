@@ -93,6 +93,7 @@
     <addaction name="separator"/>
     <addaction name="actionMapProperties"/>
     <addaction name="actionAutoMap"/>
+    <addaction name="actionAnalyze"/>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
@@ -378,6 +379,11 @@
   <action name="actionDiffTo">
    <property name="text">
     <string>Diff to...</string>
+   </property>
+  </action>
+  <action name="actionAnalyze">
+   <property name="text">
+    <string>Analyze</string>
    </property>
   </action>
  </widget>

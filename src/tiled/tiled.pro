@@ -122,7 +122,8 @@ SOURCES += aboutdialog.cpp \
     projecttreeitem.cpp \
     projectdock.cpp \
     projectactionhandler.cpp \
-    projectview.cpp
+    projectview.cpp \
+    mapanalyzermanager.cpp
 
 HEADERS += aboutdialog.h \
     automap.h \
@@ -211,7 +212,8 @@ HEADERS += aboutdialog.h \
     projecttreeitem.h \
     projectdock.h \
     projectactionhandler.h \
-    projectview.h
+    projectview.h \
+    mapanalyzermanager.h
 
 FORMS += aboutdialog.ui \
     mainwindow.ui \
