@@ -44,6 +44,7 @@
 #include "layerdock.h"
 #include "layermodel.h"
 #include "map.h"
+#include "mapanalyzermanager.h"
 #include "mapdocument.h"
 #include "mapdocumentactionhandler.h"
 #include "mapobject.h"
@@ -269,6 +270,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
     connect(mUi->actionMapProperties, SIGNAL(triggered()),
             SLOT(editMapProperties()));
     connect(mUi->actionAutoMap, SIGNAL(triggered()), SLOT(autoMap()));
+    connect(mUi->actionAnalyze, SIGNAL(triggered()), SLOT(analyze()));
 
     connect(mActionHandler->actionLayerProperties(), SIGNAL(triggered()),
             SLOT(editLayerProperties()));
@@ -409,6 +411,7 @@ MainWindow::~MainWindow()
     TilesetManager::deleteInstance();
     DocumentManager::deleteInstance();
     Preferences::deleteInstance();
+    MapAnalyzerManager::deleteInstance();
     LanguageManager::deleteInstance();
     PluginManager::deleteInstance();
 
@@ -1088,6 +1091,11 @@ void MainWindow::autoMappingError()
     }
 }
 
+void MainWindow::analyze()
+{
+    MapAnalyzerManager::instance()->analyze();
+}
+
 void MainWindow::openRecentFile()
 {
     QAction *action = qobject_cast<QAction *>(sender());
@@ -1188,6 +1196,7 @@ void MainWindow::updateActions()
     mUi->actionOffsetMap->setEnabled(map);
     mUi->actionMapProperties->setEnabled(map);
     mUi->actionAutoMap->setEnabled(map);
+    mUi->actionAnalyze->setEnabled(map);
 
     mCommandButton->setEnabled(map);
 
@@ -1385,6 +1394,7 @@ void MainWindow::mapDocumentChanged(MapDocument *mapDocument)
     mLayerDock->setMapDocument(mMapDocument);
     mTilesetDock->setMapDocument(mMapDocument);
     AutomappingManager::instance()->setMapDocument(mMapDocument);
+    MapAnalyzerManager::instance()->setMapDocument(mMapDocument);
     QuickStampManager::instance()->setMapDocument(mMapDocument);
 
     if (mMapDocument) {

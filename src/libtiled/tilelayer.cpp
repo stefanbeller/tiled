@@ -387,12 +387,12 @@ Layer *TileLayer::mergedWith(Layer *other) const
     return merged;
 }
 
-QRegion TileLayer::computeDiffRegion(const TileLayer *other) const
+QRegion TileLayer::computeDiffRegion(const TileLayer *other, const QPoint offset) const
 {
     QRegion ret;
 
-    const int dx = other->x() - mX;
-    const int dy = other->y() - mY;
+    const int dx = other->x() - mX - offset.x();
+    const int dy = other->y() - mY - offset.y();
     QRect r = QRect(0, 0, width(), height());
     r &= QRect(dx, dy, other->width(), other->height());
 

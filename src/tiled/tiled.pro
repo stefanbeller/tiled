@@ -78,6 +78,8 @@ SOURCES += aboutdialog.cpp \
     newmapdialog.cpp \
     newtilesetdialog.cpp \
     objectgroupitem.cpp \
+    mapanalyzermanager.cpp \
+    mapanalyzer.cpp \
     movemapobject.cpp \
     movemapobjecttogroup.cpp \
     resizemapobject.cpp \
@@ -89,6 +91,7 @@ SOURCES += aboutdialog.cpp \
     resizemap.cpp \
     objectpropertiesdialog.cpp \
     changemapobject.cpp \
+    smartmagic.cpp \
     stampbrush.cpp \
     toolmanager.cpp \
     eraser.cpp \
@@ -168,6 +171,8 @@ HEADERS += aboutdialog.h \
     newmapdialog.h \
     newtilesetdialog.h \
     objectgroupitem.h \
+    mapanalyzermanager.h \
+    mapanalyzer.h \
     movemapobject.h \
     movemapobjecttogroup.h \
     resizemapobject.h \
@@ -180,6 +185,7 @@ HEADERS += aboutdialog.h \
     objectpropertiesdialog.h \
     changemapobject.h \
     abstracttool.h \
+    smartmagic.h \
     stampbrush.h \
     toolmanager.h \
     eraser.h \

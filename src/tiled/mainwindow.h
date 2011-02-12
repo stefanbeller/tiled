@@ -128,6 +128,7 @@ public slots:
     void offsetMap();
     void editMapProperties();
     void autoMap();
+    void analyze();
 
     void updateWindowTitle();
     void updateActions();

@@ -269,7 +269,7 @@ public:
      * are different. The relative positions of the layers are taken into
      * account. The returned region is relative to this tile layer.
      */
-    QRegion computeDiffRegion(const TileLayer *other) const;
+    QRegion computeDiffRegion(const TileLayer *other, const QPoint offset = QPoint()) const;
 
     /**
      * Returns true if all tiles in the layer are empty.
