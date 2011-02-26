@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE project SYSTEM "http://mapeditor.org/dtd/1.0/project.dtd">
+<project>
+<maps>desert.tmx
+sewers.tmx
+</maps>
+<tilesets>sewer_tileset.png
+tmw_desert_spacing.png
+</tilesets>
+<rules></rules>
+</project>
