@@ -123,7 +123,11 @@ SOURCES += aboutdialog.cpp \
     projectdock.cpp \
     projectactionhandler.cpp \
     projectview.cpp \
-    mapanalyzermanager.cpp
+    mapanalyzermanager.cpp \
+    smarttilingtilesetviewer.cpp \
+    smarttilingviewer.cpp \
+    smarttilingtileviewer.cpp \
+    smarttilingmanager.cpp
 
 HEADERS += aboutdialog.h \
     automap.h \
@@ -213,7 +217,11 @@ HEADERS += aboutdialog.h \
     projectdock.h \
     projectactionhandler.h \
     projectview.h \
-    mapanalyzermanager.h
+    mapanalyzermanager.h \
+    smarttilingtilesetviewer.h \
+    smarttilingviewer.h \
+    smarttilingtileviewer.h \
+    smarttilingmanager.h
 
 FORMS += aboutdialog.ui \
     mainwindow.ui \

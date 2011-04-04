@@ -131,6 +131,7 @@ public slots:
     void editMapProperties();
     void autoMap();
     void analyze();
+    void analyzeSmartTiles();
 
     void updateWindowTitle();
     void updateActions();

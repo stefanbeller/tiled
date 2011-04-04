@@ -1,6 +1,6 @@
 /*
- * tilesetview.h
- * Copyright 2008-2010, Thorbjørn Lindeijer <thorbjorn@lindeijer.nl>
+ * smarttilingtilesetviewer.h
+ * Copyright 2011, Thorbjørn Lindeijer <thorbjorn@lindeijer.nl>
  * Copyright 2011, Stefan Beller <stefanbeller@googlemail.com>
  *
  * This file is part of Tiled.
@@ -18,13 +18,17 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
+#ifndef SMARTTILINGTILESETVIEWER_H
+#define SMARTTILINGTILESETVIEWER_H
 
-#ifndef TILESETVIEW_H
-#define TILESETVIEW_H
-
+#include "tile.h"
+#include "tilelayer.h"
 #include "tilesetmodel.h"
 
+#include <QWidget>
 #include <QTableView>
+
+class QLabel;
 
 namespace Tiled {
 namespace Internal {
@@ -32,21 +36,26 @@ namespace Internal {
 class MapDocument;
 class Zoomable;
 
-/**
- * The tileset view. May only be used with the TilesetModel.
- */
-class TilesetView : public QTableView
+class SmartTilingTilesetViewer : public QTableView
 {
     Q_OBJECT
-
 public:
-    TilesetView(MapDocument *mapDocument, QWidget *parent = 0);
+    enum SmartTilingTilesetViewerPosition {
+        top,
+        left,
+        right,
+        bottom
+    };
 
-    QSize sizeHint() const;
+    explicit SmartTilingTilesetViewer(SmartTilingTilesetViewerPosition pos,
+                                      Tile *t,
+                                      QWidget *parent = 0);
 
     Zoomable *zoomable() const { return mZoomable; }
 
-    bool drawGrid() const { return mDrawGrid; }
+    SmartTilingTilesetViewerPosition getPosition() const { return mPosition; }
+    Cell getReferenceTile() const { return mReferenceTile; }
+    void setLabel(QLabel *l) { mText = l; }
 
     /**
      * Convenience method that returns the model as a TilesetModel.
@@ -54,26 +63,19 @@ public:
     TilesetModel *tilesetModel() const
     { return static_cast<TilesetModel *>(model()); }
 
-protected:
-    void wheelEvent(QWheelEvent *event);
-    void contextMenuEvent(QContextMenuEvent *event);
+signals:
 
 private slots:
-    void editTileProperties();
-    void editSmarttiling();
-    void exportTileset();
-    void importTileset();
-    void toggleGrid();
-
+    void MouseEvent(const QModelIndex &index);
     void adjustScale();
-
 private:
     Zoomable *mZoomable;
-    MapDocument *mMapDocument;
-    bool mDrawGrid;
+    Cell mReferenceTile;
+    SmartTilingTilesetViewerPosition mPosition;
+    QLabel *mText;
 };
 
 } // namespace Internal
 } // namespace Tiled
 
-#endif // TILESETVIEW_H
+#endif // SmartTilingTILESETVIEWER_H

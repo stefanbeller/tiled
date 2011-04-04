@@ -2,6 +2,7 @@
  * tilelayer.h
  * Copyright 2008-2011, Thorbjørn Lindeijer <thorbjorn@lindeijer.nl>
  * Copyright 2009, Jeff Bland <jksb@member.fsf.org>
+ * Copyright 2011, Stefan Beller <stefanbeller@googlemail.com>
  *
  * This file is part of libtiled.
  *
@@ -36,6 +37,7 @@
 
 #include <QString>
 #include <QVector>
+#include <QHash>
 
 namespace Tiled {
 
@@ -80,6 +82,11 @@ public:
     bool flippedHorizontally;
     bool flippedVertically;
 };
+
+inline uint qHash(const Cell &key)
+{
+    return (quintptr)key.tile;
+}
 
 /**
  * A tile layer is a grid of cells. Each cell refers to a specific tile, and
@@ -173,6 +180,11 @@ public:
      * Computes and returns the set of tilesets used by this tile layer.
      */
     QSet<Tileset*> usedTilesets() const;
+
+    /**
+     * Computes and returns the set of cells used by this tile layer.
+     */
+    QSet<Cell> usedCells() const;
 
     /**
      * Returns whether this tile layer is referencing the given tileset.

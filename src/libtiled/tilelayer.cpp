@@ -2,6 +2,7 @@
  * tilelayer.cpp
  * Copyright 2008-2011, Thorbjørn Lindeijer <thorbjorn@lindeijer.nl>
  * Copyright 2009, Jeff Bland <jksb@member.fsf.org>
+ * Copyright 2011, Stefan Beller <stefanbeller@googlemail.com>
  *
  * This file is part of libtiled.
  *
@@ -172,6 +173,19 @@ QSet<Tileset*> TileLayer::usedTilesets() const
             tilesets.insert(tile->tileset());
 
     return tilesets;
+}
+
+QSet<Cell> TileLayer::usedCells() const
+{
+    QSet<Cell> cells;
+
+    for (int i = 0, i_end = mGrid.size(); i < i_end; ++i) {
+        Cell tile = mGrid.at(i);
+        if (tile.tile)
+            cells.insert(tile);
+    }
+
+    return cells;
 }
 
 bool TileLayer::referencesTileset(const Tileset *tileset) const

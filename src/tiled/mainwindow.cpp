@@ -6,7 +6,7 @@
  * Copyright 2009, Dennis Honeyman <arcticuno@gmail.com>
  * Copyright 2009, Christian Henz <chrhenz@gmx.de>
  * Copyright 2010, Andrew G. Crowell <overkill9999@gmail.com>
- * Copyright 2010, Stefan Beller <stefanbeller@googlemail.com>
+ * Copyright 2010-2011, Stefan Beller <stefanbeller@googlemail.com>
  *
  * This file is part of Tiled.
  *
@@ -67,6 +67,7 @@
 #include "quickstampmanager.h"
 #include "saveasimagedialog.h"
 #include "selectiontool.h"
+#include "smarttilingmanager.h"
 #include "stampbrush.h"
 #include "tilelayer.h"
 #include "tileset.h"
@@ -259,6 +260,11 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
     connect(mUi->actionAutoMap, SIGNAL(triggered()), SLOT(autoMap()));
     connect(mUi->actionAnalyze, SIGNAL(triggered()), SLOT(analyze()));
 
+    connect(mUi->actionAnalyzeSmartTiles, SIGNAL(triggered()),
+            SLOT(analyzeSmartTiles()));
+    connect(mUi->actionEnableSmartTiling, SIGNAL(toggled(bool)),
+            SmartTilingManager::instance(), SLOT(setEnabled(bool)));
+
     connect(mMapDocumentActionHandler->actionLayerProperties(), SIGNAL(triggered()),
             SLOT(editLayerProperties()));
 
@@ -369,6 +375,7 @@ MainWindow::~MainWindow()
 
     mDocumentManager->closeAllDocuments();
 
+    SmartTilingManager::deleteInstance();
     AutomaticMappingManager::deleteInstance();
     QuickStampManager::deleteInstance();
     ToolManager::deleteInstance();
@@ -1162,6 +1169,11 @@ void MainWindow::analyze()
     MapAnalyzerManager::instance()->analyze();
 }
 
+void MainWindow::analyzeSmartTiles()
+{
+    SmartTilingManager::instance()->addSmartTiles(mStampBrush->stamp());
+}
+
 void MainWindow::openRecentFile()
 {
     QAction *action = qobject_cast<QAction *>(sender());
@@ -1435,6 +1447,7 @@ void MainWindow::mapDocumentChanged(MapDocument *mapDocument)
     AutomaticMappingManager::instance()->setMapDocument(mMapDocument);
     MapAnalyzerManager::instance()->setMapDocument(mMapDocument);
     QuickStampManager::instance()->setMapDocument(mMapDocument);
+    SmartTilingManager::instance()->setMapDocument(mMapDocument);
 
     if (mMapDocument) {
         connect(mMapDocument, SIGNAL(fileNameChanged()),

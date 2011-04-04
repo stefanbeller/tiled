@@ -1,6 +1,7 @@
 /*
  * tilesetview.cpp
  * Copyright 2008-2010, Thorbjørn Lindeijer <thorbjorn@lindeijer.nl>
+ * Copyright 2011, Stefan Beller <stefanbeller@googlemail.com>
  *
  * This file is part of Tiled.
  *
@@ -20,6 +21,7 @@
 
 #include "tilesetview.h"
 
+#include "smarttilingviewer.h"
 #include "map.h"
 #include "mapdocument.h"
 #include "propertiesdialog.h"
@@ -162,7 +164,7 @@ TilesetView::TilesetView(MapDocument *mapDocument, QWidget *parent)
     // Hardcode this view on 'left to right' since it doesn't work properly
     // for 'right to left' languages.
     setLayoutDirection(Qt::LeftToRight);
-    
+
     connect(mZoomable, SIGNAL(scaleChanged(qreal)), SLOT(adjustScale()));
 }
 
@@ -217,6 +219,13 @@ void TilesetView::contextMenuEvent(QContextMenuEvent *event)
 
         connect(tileProperties, SIGNAL(triggered()),
                 SLOT(editTileProperties()));
+
+        QAction *smartTiling = menu.addAction(propIcon,
+                                                 tr("Edit Smart&tiling..."));
+        Utils::setThemeIcon(smartTiling, "document-properties");
+        menu.addSeparator();
+        connect(smartTiling, SIGNAL(triggered()),
+                SLOT(editSmarttiling()));
     }
 
     QIcon exportIcon(QLatin1String(":images/16x16/document-export.png"));
@@ -257,6 +266,19 @@ void TilesetView::editTileProperties()
                                       mMapDocument->undoStack(),
                                       this);
     propertiesDialog.exec();
+}
+
+void TilesetView::editSmarttiling()
+{
+    const TilesetModel *m = tilesetModel();
+    Tile *tile = m->tileAt(selectionModel()->currentIndex());
+    if (!tile)
+        return;
+
+    SmartTilingViewer smartTilingViewer(tr("Tile"),
+                                      tile,
+                                      this);
+    smartTilingViewer.exec();
 }
 
 void TilesetView::exportTileset()
