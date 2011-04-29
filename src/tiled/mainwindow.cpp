@@ -684,7 +684,8 @@ void MainWindow::exportAs()
 
     PluginManager *pm = PluginManager::instance();
     QList<MapWriterInterface*> writers = pm->interfaces<MapWriterInterface>();
-    QString filter = tr("All Files (*)");
+    QString filterAllFiles = tr("All Files (*)");
+    QString filter = filterAllFiles;
     foreach (MapWriterInterface *writer, writers) {
         filter += QLatin1String(";;");
         filter += writer->nameFilter();
@@ -693,9 +694,49 @@ void MainWindow::exportAs()
     QString selectedFilter =
             mSettings.value(QLatin1String("lastUsedExportFilter")).toString();
 
-    QString fileName = QFileDialog::getSaveFileName(this, tr("Export As..."),
-                                                    fileDialogStartLocation(),
-                                                    filter, &selectedFilter);
+    QString fileName;
+    bool repeat;
+    do {
+        repeat = false;
+        QString suggestedFileName = QFileInfo(mMapDocument->fileName()).baseName();
+        fileName = QFileDialog::getSaveFileName(
+                    this, tr("Export As..."),
+                    fileDialogStartLocation() + QLatin1Char('/') + suggestedFileName,
+                    filter, &selectedFilter, QFileDialog::DontConfirmOverwrite);
+        if (!fileName.isEmpty()) {
+            // If the selected filter is All Files (*) we leave the name exactly
+            // as the user specified. Otherwise the suffix must be one available
+            // in the selected filter. If the name already ends with such suffix
+            // nothing needs to be done. But if not, the first one from the
+            // filter is appended.
+            if (selectedFilter != filterAllFiles) {
+                // Mime database creates filter strings like this: Anything here (*.foo *.bar)
+                QRegExp regExp(QLatin1String(".*\\s+\\((.*)\\)$"));
+                const int index = regExp.lastIndexIn(selectedFilter);
+                bool suffixOk = false;
+                if (index != -1) {
+                    const QStringList &suffixes = regExp.cap(1)
+                            .remove(QLatin1Char('*')).split(QLatin1Char(' '));
+                    foreach (const QString &suffix, suffixes)
+                        if (fileName.endsWith(suffix)) {
+                            suffixOk = true;
+                            break;
+                        }
+                    if (!suffixOk && !suffixes.isEmpty())
+                        fileName.append(suffixes.at(0));
+                }
+            }
+            if (QFile::exists(fileName)) {
+                if (QMessageBox::warning(this, tr("Overwrite?"),
+                    tr("An item named '%1' already exists at this location. "
+                       "Do you want to overwrite it?").arg(fileName),
+                    QMessageBox::Yes | QMessageBox::No) == QMessageBox::No) {
+                    repeat = true;
+                }
+            }
+        }
+    } while (repeat);
+
     if (fileName.isEmpty())
         return;
 
