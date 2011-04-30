@@ -192,7 +192,7 @@ private:
 
     Ui::MainWindow *mUi;
     MapDocument *mMapDocument;
-    MapDocumentActionHandler *mActionHandler;
+    MapDocumentActionHandler *mMapDocumentActionHandler;
     LayerDock *mLayerDock;
     TilesetDock *mTilesetDock;
     QLabel *mZoomLabel;

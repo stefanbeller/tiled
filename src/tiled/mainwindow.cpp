@@ -95,7 +95,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
     : QMainWindow(parent, flags)
     , mUi(new Ui::MainWindow)
     , mMapDocument(0)
-    , mActionHandler(new MapDocumentActionHandler(this))
+    , mMapDocumentActionHandler(new MapDocumentActionHandler(this))
     , mLayerDock(new LayerDock(this))
     , mTilesetDock(new TilesetDock(this))
     , mZoomLabel(new QLabel)
@@ -179,9 +179,9 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
     mUi->menuEdit->insertAction(mUi->actionCut, redoAction);
     mUi->menuEdit->insertSeparator(mUi->actionCut);
     mUi->menuEdit->insertAction(mUi->actionPreferences,
-                                mActionHandler->actionSelectAll());
+                                mMapDocumentActionHandler->actionSelectAll());
     mUi->menuEdit->insertAction(mUi->actionPreferences,
-                                mActionHandler->actionSelectNone());
+                                mMapDocumentActionHandler->actionSelectNone());
     mUi->menuEdit->insertSeparator(mUi->actionPreferences);
     mUi->mainToolBar->addAction(undoAction);
     mUi->mainToolBar->addAction(redoAction);
@@ -192,23 +192,23 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
     mUi->mainToolBar->addWidget(mCommandButton);
 
     mUi->menuMap->insertAction(mUi->actionOffsetMap,
-                               mActionHandler->actionCropToSelection());
+                               mMapDocumentActionHandler->actionCropToSelection());
 
     mLayerMenu = new QMenu(tr("&Layer"), this);
-    mLayerMenu->addAction(mActionHandler->actionAddTileLayer());
-    mLayerMenu->addAction(mActionHandler->actionAddObjectGroup());
-    mLayerMenu->addAction(mActionHandler->actionDuplicateLayer());
-    mLayerMenu->addAction(mActionHandler->actionMergeLayerDown());
-    mLayerMenu->addAction(mActionHandler->actionRemoveLayer());
+    mLayerMenu->addAction(mMapDocumentActionHandler->actionAddTileLayer());
+    mLayerMenu->addAction(mMapDocumentActionHandler->actionAddObjectGroup());
+    mLayerMenu->addAction(mMapDocumentActionHandler->actionDuplicateLayer());
+    mLayerMenu->addAction(mMapDocumentActionHandler->actionMergeLayerDown());
+    mLayerMenu->addAction(mMapDocumentActionHandler->actionRemoveLayer());
     mLayerMenu->addSeparator();
-    mLayerMenu->addAction(mActionHandler->actionSelectPreviousLayer());
-    mLayerMenu->addAction(mActionHandler->actionSelectNextLayer());
-    mLayerMenu->addAction(mActionHandler->actionMoveLayerUp());
-    mLayerMenu->addAction(mActionHandler->actionMoveLayerDown());
+    mLayerMenu->addAction(mMapDocumentActionHandler->actionSelectPreviousLayer());
+    mLayerMenu->addAction(mMapDocumentActionHandler->actionSelectNextLayer());
+    mLayerMenu->addAction(mMapDocumentActionHandler->actionMoveLayerUp());
+    mLayerMenu->addAction(mMapDocumentActionHandler->actionMoveLayerDown());
     mLayerMenu->addSeparator();
-    mLayerMenu->addAction(mActionHandler->actionToggleOtherLayers());
+    mLayerMenu->addAction(mMapDocumentActionHandler->actionToggleOtherLayers());
     mLayerMenu->addSeparator();
-    mLayerMenu->addAction(mActionHandler->actionLayerProperties());
+    mLayerMenu->addAction(mMapDocumentActionHandler->actionLayerProperties());
 
     menuBar()->insertMenu(mUi->menuHelp->menuAction(), mLayerMenu);
 
@@ -247,7 +247,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
             SLOT(editMapProperties()));
     connect(mUi->actionAutoMap, SIGNAL(triggered()), SLOT(autoMap()));
 
-    connect(mActionHandler->actionLayerProperties(), SIGNAL(triggered()),
+    connect(mMapDocumentActionHandler->actionLayerProperties(), SIGNAL(triggered()),
             SLOT(editLayerProperties()));
 
     connect(mUi->actionAbout, SIGNAL(triggered()), SLOT(aboutTiled()));
@@ -814,7 +814,7 @@ void MainWindow::cut()
             stack->push(new RemoveMapObject(mMapDocument, mapObject));
     }
 
-    mActionHandler->selectNone();
+    mMapDocumentActionHandler->selectNone();
 
     stack->endMacro();
 }
@@ -856,7 +856,7 @@ void MainWindow::paste()
 
     if (TileLayer *tileLayer = layer->asTileLayer()) {
         // Reset selection and paste into the stamp brush
-        mActionHandler->selectNone();
+        mMapDocumentActionHandler->selectNone();
         setStampBrush(tileLayer);
         ToolManager::instance()->selectTool(mStampBrush);
     } else if (ObjectGroup *objectGroup = layer->asObjectGroup()) {
@@ -1292,7 +1292,7 @@ void MainWindow::retranslateUi()
     updateWindowTitle();
 
     mLayerMenu->setTitle(tr("&Layer"));
-    mActionHandler->retranslateUi();
+    mMapDocumentActionHandler->retranslateUi();
 }
 
 void MainWindow::mapDocumentChanged(MapDocument *mapDocument)
@@ -1302,7 +1302,7 @@ void MainWindow::mapDocumentChanged(MapDocument *mapDocument)
 
     mMapDocument = mapDocument;
 
-    mActionHandler->setMapDocument(mMapDocument);
+    mMapDocumentActionHandler->setMapDocument(mMapDocument);
     mLayerDock->setMapDocument(mMapDocument);
     mTilesetDock->setMapDocument(mMapDocument);
     AutomaticMappingManager::instance()->setMapDocument(mMapDocument);
