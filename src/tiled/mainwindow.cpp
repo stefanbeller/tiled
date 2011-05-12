@@ -74,6 +74,7 @@
 #include "utils.h"
 #include "zoomable.h"
 #include "commandbutton.h"
+#include "scriptdock.h"
 
 #ifdef Q_WS_MAC
 #include "macsupport.h"
@@ -104,6 +105,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
     , mMapDocument(0)
     , mActionHandler(new MapDocumentActionHandler(this))
     , mLayerDock(new LayerDock(this))
+    , mScriptDock(new ScriptDock(this))
     , mTilesetDock(new TilesetDock(this))
     , mCurrentLayerLabel(new QLabel)
     , mZoomLabel(new QLabel)
@@ -158,7 +160,9 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
 
     addDockWidget(Qt::RightDockWidgetArea, mLayerDock);
     addDockWidget(Qt::RightDockWidgetArea, undoDock);
+    addDockWidget(Qt::RightDockWidgetArea, mScriptDock);
     tabifyDockWidget(undoDock, mLayerDock);
+    tabifyDockWidget(undoDock, mScriptDock);
     addDockWidget(Qt::RightDockWidgetArea, mTilesetDock);
 
     statusBar()->addPermanentWidget(mZoomLabel);
@@ -233,7 +237,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
     mLayerMenu->addSeparator();
     mLayerMenu->addAction(mActionHandler->actionLayerProperties());
 
-    menuBar()->insertMenu(mUi->menuHelp->menuAction(), mLayerMenu);
+    menuBar()->insertMenu(mUi->menuScript->menuAction(), mLayerMenu);
 
     connect(mUi->actionNew, SIGNAL(triggered()), SLOT(newMap()));
     connect(mUi->actionOpen, SIGNAL(triggered()), SLOT(openFile()));
@@ -275,6 +279,12 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
 
     connect(mActionHandler->actionLayerProperties(), SIGNAL(triggered()),
             SLOT(editLayerProperties()));
+
+    // Script actions
+    connect(mUi->actionNewScript, SIGNAL(triggered()), SLOT(newScript()));
+    connect(mUi->actionOpenScript, SIGNAL(triggered()), SLOT(openScript()));
+    connect(mUi->actionSaveScript, SIGNAL(triggered()), SLOT(saveScript()));
+    connect(mUi->actionSaveScript_as, SIGNAL(triggered()), SLOT(saveScriptAs()));
 
     connect(mUi->actionAbout, SIGNAL(triggered()), SLOT(aboutTiled()));
     connect(mUi->actionAboutQt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
@@ -363,6 +373,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
     mUi->menuView->addAction(mTilesetDock->toggleViewAction());
     mUi->menuView->addAction(mLayerDock->toggleViewAction());
     mUi->menuView->addAction(undoDock->toggleViewAction());
+    mUi->menuView->addAction(mScriptDock->toggleViewAction());
 
     connect(mClipboardManager, SIGNAL(hasMapChanged()), SLOT(updateActions()));
 
@@ -1406,6 +1417,65 @@ void MainWindow::addMapDocument(MapDocument *mapDocument)
             mapScene, SLOT(setGridVisible(bool)));
 }
 
+void MainWindow::newScript()
+{
+    mScriptDock->newScript();
+}
+
+void MainWindow::openScript()
+{
+    QString filter = tr("All Files (*)");
+    filter += QLatin1String(";;");
+
+    QString selectedFilter = tr("Lua script file (*.lua)");
+    filter += selectedFilter;
+
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open Script"),
+                                                    fileDialogStartLocation(),
+                                                    filter, &selectedFilter);
+    if (fileName.isEmpty())
+        return;
+
+    mScriptDock->openScript(fileName);
+}
+
+bool MainWindow::saveScript()
+{
+    if (!mScriptDock)
+        return false;
+
+    const QString currentFileName = mScriptDock->fileName();
+
+    if (currentFileName.endsWith(QLatin1String(".lua"), Qt::CaseInsensitive))
+        return mScriptDock->saveScript(currentFileName);
+    else
+        return saveScriptAs();
+
+    return saveScriptAs();
+}
+
+bool MainWindow::saveScriptAs()
+{
+    QString suggestedFileName;
+    suggestedFileName = fileDialogStartLocation();
+    suggestedFileName += QLatin1Char('/');
+    suggestedFileName += tr("untitled.lua");
+
+    QString filter = tr("All Files (*)");
+    filter += QLatin1String(";;");
+
+    QString selectedFilter = tr("Lua script file (*.lua)");
+    filter += selectedFilter;
+
+    const QString fileName =
+            QFileDialog::getSaveFileName(this, QString(), suggestedFileName,
+                                         filter, &selectedFilter);
+    if (!fileName.isEmpty())
+        return mScriptDock->saveScript(fileName);
+
+    return false;
+}
+
 void MainWindow::aboutTiled()
 {
     AboutDialog aboutDialog(this);
@@ -1430,6 +1500,7 @@ void MainWindow::mapDocumentChanged(MapDocument *mapDocument)
 
     mActionHandler->setMapDocument(mMapDocument);
     mLayerDock->setMapDocument(mMapDocument);
+    mScriptDock->setMapDocument(mMapDocument);
     mTilesetDock->setMapDocument(mMapDocument);
     AutomappingManager::instance()->setMapDocument(mMapDocument);
     QuickStampManager::instance()->setMapDocument(mMapDocument);

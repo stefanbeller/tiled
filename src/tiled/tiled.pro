@@ -1,4 +1,5 @@
 include(../../tiled.pri)
+include(../liblua/liblua.pri)
 include(../libtiled/libtiled.pri)
 
 TEMPLATE = app
@@ -112,6 +113,9 @@ SOURCES += aboutdialog.cpp \
     resizemap.cpp \
     resizemapobject.cpp \
     saveasimagedialog.cpp \
+    scriptdock.cpp \
+    scripteditor.cpp \
+    scripthighlighter.cpp \
     selectionrectangle.cpp \
     stampbrush.cpp \
     tiledapplication.cpp \
@@ -168,6 +172,7 @@ HEADERS += aboutdialog.h \
     languagemanager.h \
     layerdock.h \
     layermodel.h \
+    luabinds.h \
     macsupport.h \
     mainwindow.h \
     mapdocumentactionhandler.h \
@@ -207,6 +212,9 @@ HEADERS += aboutdialog.h \
     resizemap.h \
     resizemapobject.h \
     saveasimagedialog.h \
+    scriptdock.h \
+    scripteditor.h \
+    scripthighlighter.h \
     selectionrectangle.h \
     stampbrush.h \
     tiledapplication.h \

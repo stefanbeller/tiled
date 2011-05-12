@@ -244,6 +244,12 @@ public:
     const QList<Tileset*> &tilesets() const { return mTilesets; }
 
     /**
+     * Return the first tileset matching the given name.
+     * @return a tileset matching the given name, or 0 if none exists
+     */
+    Tileset *findTileset(const QString &name) const;
+
+    /**
      * Returns whether the given \a tileset is used by any tile layer of this
      * map.
      */

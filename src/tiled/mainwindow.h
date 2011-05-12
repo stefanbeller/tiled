@@ -47,6 +47,7 @@ namespace Internal {
 class ClipboardManager;
 class DocumentManager;
 class LayerDock;
+class ScriptDock;
 class MapDocumentActionHandler;
 class MapScene;
 class StampBrush;
@@ -143,6 +144,11 @@ public slots:
     void rotateStampLeft();
     void rotateStampRight();
 
+    void newScript();
+    void openScript();
+    bool saveScript();
+    bool saveScriptAs();
+
     void setStampBrush(const TileLayer *tiles);
     void updateStatusInfoLabel(const QString &statusInfo);
 
@@ -200,6 +206,7 @@ private:
     MapDocument *mMapDocument;
     MapDocumentActionHandler *mActionHandler;
     LayerDock *mLayerDock;
+    ScriptDock *mScriptDock;
     TilesetDock *mTilesetDock;
     QLabel *mCurrentLayerLabel;
     QLabel *mZoomLabel;
