@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE map SYSTEM "http://mapeditor.org/dtd/1.0/map.dtd">
+<map version="1.0" orientation="hexagonal" width="25" height="25" tilewidth="64" tileheight="32">
+ <tileset firstgid="1" name="hexagon" tilewidth="64" tileheight="32">
+  <image source="hexagon.png" width="300" height="91"/>
+ </tileset>
+ <tileset firstgid="9" name="hexagon2" tilewidth="64" tileheight="32">
+  <image source="hexagon2.png" width="192" height="32"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="25" height="25">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+NmYGDgHsUUYa5hZget7OLCgWltx1D3By3jmx7pahSP4lE8ikcxbTAAr/HFpMQJAAA=
+  </data>
+ </layer>
+</map>

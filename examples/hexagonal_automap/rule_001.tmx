@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE map SYSTEM "http://mapeditor.org/dtd/1.0/map.dtd">
+<map version="1.0" orientation="hexagonal" width="13" height="12" tilewidth="72" tileheight="72">
+ <properties>
+  <property name="AutomappingRadius" value="5"/>
+  <property name="DeleteTiles" value="yes"/>
+ </properties>
+ <tileset firstgid="1" name="wesnoth1" tilewidth="72" tileheight="72">
+  <image source="../wesnoth1.png" width="216" height="216"/>
+ </tileset>
+ <tileset firstgid="10" name="wesnoth_am" tilewidth="72" tileheight="72">
+  <image source="../wesnoth_am.png" width="216" height="72"/>
+ </tileset>
+ <layer name="RuleRegions" width="13" height="12">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA2NgoD/ggWIGNJoHu3IUfdhofGpJlSfXbcTaS21Ain30dhs2AACt44bKcAIAAA==
+  </data>
+ </layer>
+ <layer name="RuleSet" width="13" height="12">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA2NgoD/gBmIuJDYDlM+NXTkccOGgcdlBjFn43IZMEzKPWHupDUixD1940QsAAENhfVdwAgAA
+  </data>
+ </layer>
+ <layer name="RuleSet" width="13" height="12">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA2NgGBjATYA/CoYnAADtKrC0cAIAAA==
+  </data>
+ </layer>
+ <layer name="rule_ground" width="13" height="12">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA2NgGJ6AiYA8I11cQXtAyJ/IYDD4GQB82UVDcAIAAA==
+  </data>
+ </layer>
+ <layer name="rule_blendingN" width="13" height="12">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA2NgGHqAdaAdMArIBgDd7Mt4cAIAAA==
+  </data>
+ </layer>
+ <layer name="rule_blendingS" width="13" height="12">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA2NgGAW4AMdAO2AYAgD21ApscAIAAA==
+  </data>
+ </layer>
+ <layer name="rule_blendingNE" width="13" height="12">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA2NgGDqABY3PNiCuGAWUAAAGArtfcAIAAA==
+  </data>
+ </layer>
+ <layer name="rule_blendingNW" width="13" height="12">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA2NgGDqAZaAdMAooBgAWnwtIcAIAAA==
+  </data>
+ </layer>
+ <layer name="rule_blendingSW" width="13" height="12">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA2NgGAXogH2gHTCMAQC5KSRPcAIAAA==
+  </data>
+ </layer>
+ <layer name="rule_blendingSE" width="13" height="12">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA2NgGAWEAOdAO2AYAQB0BNPicAIAAA==
+  </data>
+ </layer>
+</map>
