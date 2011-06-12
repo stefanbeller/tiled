@@ -6,7 +6,20 @@
  </tileset>
  <layer name="Tile Layer 1" width="25" height="25">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA32V227DMAxDpTpb13Uvazu0//+lc4AIJU6oPAiJHVsXklJeEfGa9jTPeq/1edpps5y2yHps62X7NuRd/T3hW2PccL+eznfFr2+df83/KjUwxiL+WFOdJx6Mof7Vn+ar2GlNKTGIj77f5J7mqTi5enSffte8fwwPej/Bfcoea8vY4/Q97QIe6h79jfB1Ka6uDvKs/Gbsua69Tsfr+t4Y/WvOGV7DysPA2VN4TgvTj2mfkrfGIr/ENA/i6Z2vrS7y7mKTC8dP7bGHdW/1/TvtL/aaIGaKqeLEfmOOj3j3jmqUvdnlSLzIbyJGxwtr0v5hLkvssdAYeoda0fyVy24+FMcrDxfEcFyzTznTmJPqy/WQm5fEjfgRp6PZ5+akmzcdpt0Zxu1mgPaG455zx/E2cFZ7mziQM6eNTiuO2yPtd3OaXLmeG/Db5UGO2R9O45yp1DJr7/BxGJAXziHOBuWJ/wP+O/nPUD1QL+X3H78y42PECQAA
+   H4sIAAAAAAAAA6WVbW/DIAyEIaTr+rL0ZZ2an5ufPrpxyrMTUE39YIEI3Nk+25lDCHO2e2XV3u3+T2u9mY2jx/mKH7p7yHaq2LHzruVb7U7GX7Z5HbKNZu8dnlaOnOexXoE5YB3A81mJrZW74vfPPX0jRyprLBwRfKmst45u4tln20GHbcESdgTmCGzn6OVqNvxUcNPKteT9kvGW+LsPNOXuaDyHck5zfPnNePx7wtnZ/J9MS91VzjfZ3kyLhH05X6iX19wE39xUO1vLf4t7xLtbWOtI9c9aScbD2npgX7J9VWqixrEvvpDD68j7Q7VztTde22doPlmcnivqG43DdWEuWMeKhfmg/85FDvrPmKJxUBPeGYxTOuyMo5Vn1u8U/ubJ5wRnYK2HXBPFJc2ZK9eM/cJ5xRpmjoTPeH1OfYDLYyFGNC7OLOlQ+6d6P3qP+AykTrrr/rf+iZrl8r1WL+xJcWwMuzd71VdjWGdFa84wd7cKVotD+ssv5W5T9LoUUz+19H1m/E+pFnaVOxc77+n8qj3D/Aa6eiq+xAkAAA==
+  </data>
+ </layer>
+ <objectgroup name="Object Layer 1" width="25" height="25">
+  <object name="Magic Place" type="Descriptive" x="128" y="160" width="32" height="32"/>
+  <object name="Place of the Coconuts" type="Description" x="160" y="384" width="128" height="192">
+   <properties>
+    <property name="NumberOfCocos" value="42"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <layer name="Tile Layer 2" width="25" height="25">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+3BAQ0AAADCoPdPbQ43oAAAeDP5i1XpxAkAAA==
   </data>
  </layer>
 </map>
