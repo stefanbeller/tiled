@@ -115,7 +115,14 @@ SOURCES += aboutdialog.cpp \
     commanddialog.cpp \
     tiledapplication.cpp \
     command.cpp \
-    abstractobjecttool.cpp
+    abstractobjecttool.cpp \
+    project.cpp \
+    projectreader.cpp \
+    projecttreemodel.cpp \
+    projecttreeitem.cpp \
+    projectdock.cpp \
+    projectactionhandler.cpp \
+    projectview.cpp
 
 HEADERS += aboutdialog.h \
     automap.h \
@@ -197,7 +204,14 @@ HEADERS += aboutdialog.h \
     commandbutton.h \
     tiledapplication.h \
     command.h \
-    abstractobjecttool.h
+    abstractobjecttool.h \
+    project.h \
+    projectreader.h \
+    projecttreemodel.h \
+    projecttreeitem.h \
+    projectdock.h \
+    projectactionhandler.h \
+    projectview.h
 
 FORMS += aboutdialog.ui \
     mainwindow.ui \
