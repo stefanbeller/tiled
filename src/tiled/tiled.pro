@@ -101,6 +101,13 @@ SOURCES += aboutdialog.cpp \
     pluginmanager.cpp \
     preferences.cpp \
     preferencesdialog.cpp \
+    project.cpp \
+    projectreader.cpp \
+    projecttreemodel.cpp \
+    projecttreeitem.cpp \
+    projectdock.cpp \
+    projectactionhandler.cpp \
+    projectview.cpp \
     propertiesdialog.cpp \
     propertiesmodel.cpp \
     propertiesview.cpp \
@@ -197,6 +204,13 @@ HEADERS += aboutdialog.h \
     preferences.h \
     propertiesdialog.h \
     propertiesmodel.h \
+    project.h \
+    projectreader.h \
+    projecttreemodel.h \
+    projecttreeitem.h \
+    projectdock.h \
+    projectactionhandler.h \
+    projectview.h \
     propertiesview.h \
     quickstampmanager.h \
     rangeset.h \

@@ -54,6 +54,9 @@ class BucketFillTool;
 class TilesetDock;
 class MapView;
 class CommandButton;
+class ProjectDock;
+class ProjectTreeModel;
+class ProjectActionHandler;
 
 /**
  * The main editor window.
@@ -199,9 +202,12 @@ private:
     Ui::MainWindow *mUi;
     MapDocument *mMapDocument;
     MapDocumentActionHandler *mActionHandler;
+    ProjectActionHandler *mProjectActionHandler;
     LayerDock *mLayerDock;
     TilesetDock *mTilesetDock;
     QLabel *mCurrentLayerLabel;
+    ProjectTreeModel *mProjectTreeModel;
+    ProjectDock *mProjectDock;
     QLabel *mZoomLabel;
     QLabel *mStatusInfoLabel;
     QSettings mSettings;

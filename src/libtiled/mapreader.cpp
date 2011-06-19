@@ -131,7 +131,8 @@ Map *MapReaderPrivate::readMap(QIODevice *device, const QString &path)
     if (xml.readNextStartElement() && xml.name() == "map") {
         map = readMap();
     } else {
-        xml.raiseError(tr("Not a map file."));
+        mError = tr("Not a map file.");
+        return 0;
     }
 
     mGidMapper.clear();

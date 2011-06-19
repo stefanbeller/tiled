@@ -59,6 +59,10 @@
 #include "offsetmapdialog.h"
 #include "preferences.h"
 #include "preferencesdialog.h"
+#include "projectactionhandler.h"
+#include "projectdock.h"
+#include "projecttreemodel.h"
+#include "projectreader.h"
 #include "quickstampmanager.h"
 #include "saveasimagedialog.h"
 #include "stampbrush.h"
@@ -103,9 +107,12 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
     , mUi(new Ui::MainWindow)
     , mMapDocument(0)
     , mActionHandler(new MapDocumentActionHandler(this))
+    , mProjectActionHandler(new ProjectActionHandler(this))
     , mLayerDock(new LayerDock(this))
     , mTilesetDock(new TilesetDock(this))
     , mCurrentLayerLabel(new QLabel)
+    , mProjectTreeModel(new ProjectTreeModel())
+    , mProjectDock(new ProjectDock(mProjectTreeModel, this))
     , mZoomLabel(new QLabel)
     , mStatusInfoLabel(new QLabel)
     , mClipboardManager(new ClipboardManager(this))
@@ -160,6 +167,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
     addDockWidget(Qt::RightDockWidgetArea, undoDock);
     tabifyDockWidget(undoDock, mLayerDock);
     addDockWidget(Qt::RightDockWidgetArea, mTilesetDock);
+    addDockWidget(Qt::LeftDockWidgetArea, mProjectDock);
 
     statusBar()->addPermanentWidget(mZoomLabel);
 
@@ -363,6 +371,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
     mUi->menuView->addAction(mTilesetDock->toggleViewAction());
     mUi->menuView->addAction(mLayerDock->toggleViewAction());
     mUi->menuView->addAction(undoDock->toggleViewAction());
+    mUi->menuView->addAction(mProjectDock->toggleViewAction());
 
     connect(mClipboardManager, SIGNAL(hasMapChanged()), SLOT(updateActions()));
 
@@ -402,10 +411,14 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
             this, SLOT(autoMappingWarning()));
     connect(AutomappingManager::instance(), SIGNAL(errorsOccurred()),
             this, SLOT(autoMappingError()));
+    connect(mProjectDock, SIGNAL(openFile(QString)), SLOT(openFile(QString)));
 }
 
+#include <QDebug>
 MainWindow::~MainWindow()
 {
+    delete mProjectTreeModel;
+
     mDocumentManager->closeAllDocuments();
 
     AutomappingManager::deleteInstance();
@@ -523,15 +536,25 @@ bool MainWindow::openFile(const QString &fileName,
         mapReader = &tmxMapReader;
 
     Map *map = mapReader->read(fileName);
-    if (!map) {
-        QMessageBox::critical(this, tr("Error Opening Map"),
-                              mapReader->errorString());
-        return false;
+    if (map) {
+        addMapDocument(new MapDocument(map, fileName));
+        setRecentFile(fileName);
+        return true;
     }
 
-    addMapDocument(new MapDocument(map, fileName));
-    setRecentFile(fileName);
-    return true;
+    // first check if it is another document
+    ProjectReader projectReader;
+    Project *project = projectReader.readProject(fileName);
+
+    if (project) {
+        mProjectTreeModel->addProject(project);
+//        mProjectDock->addProject(project);
+        return true;
+    }
+
+    QMessageBox::critical(this, tr("Error Opening File"),
+                          mapReader->errorString());
+    return false;
 }
 
 bool MainWindow::openFile(const QString &fileName)
@@ -609,7 +632,11 @@ void MainWindow::openFile()
     QString filter = tr("All Files (*)");
     filter += QLatin1String(";;");
 
-    QString selectedFilter = tr("Tiled map files (*.tmx)");
+    QString selectedFilter = tr("Tiled project files (*.tiled)");
+    filter += selectedFilter;
+    filter += QLatin1String(";;");
+
+    selectedFilter = tr("Tiled map files (*.tmx)");
     filter += selectedFilter;
 
     selectedFilter = mSettings.value(QLatin1String("lastUsedOpenFilter"),
