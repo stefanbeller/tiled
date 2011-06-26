@@ -68,6 +68,7 @@ SOURCES += aboutdialog.cpp \
     commandlineparser.cpp \
     createobjecttool.cpp \
     documentmanager.cpp \
+    diffdock.cpp \
     editpolygontool.cpp \
     editterraindialog.cpp \
     eraser.cpp \
@@ -174,6 +175,7 @@ HEADERS += aboutdialog.h \
     command.h \
     commandlineparser.h \
     createobjecttool.h \
+    diffdock.h \
     documentmanager.h \
     editpolygontool.h \
     editterraindialog.h \

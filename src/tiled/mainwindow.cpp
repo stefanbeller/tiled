@@ -28,11 +28,13 @@
 #include "ui_mainwindow.h"
 
 #include "aboutdialog.h"
+#include "addremovelayer.h"
 #include "addremovemapobject.h"
 #include "automappingmanager.h"
 #include "addremovetileset.h"
 #include "clipboardmanager.h"
 #include "createobjecttool.h"
+#include "diffdock.h"
 #include "documentmanager.h"
 #include "editpolygontool.h"
 #include "eraser.h"
@@ -120,6 +122,8 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
     , mCurrentLayerLabel(new QLabel)
     , mZoomable(0)
     , mZoomComboBox(new QComboBox)
+    , mDiffDock(new DiffDock(this))
+    , mZoomLabel(new QLabel)
     , mStatusInfoLabel(new QLabel)
     , mClipboardManager(new ClipboardManager(this))
     , mDocumentManager(DocumentManager::instance())
@@ -173,6 +177,10 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
     addDockWidget(Qt::RightDockWidgetArea, mObjectsDock);
     addDockWidget(Qt::RightDockWidgetArea, mMiniMapDock);
     addDockWidget(Qt::RightDockWidgetArea, mTerrainDock);
+    addDockWidget(Qt::RightDockWidgetArea, mDiffDock);
+    tabifyDockWidget(undoDock, mLayerDock);
+    tabifyDockWidget(undoDock, mDiffDock);
+
     addDockWidget(Qt::RightDockWidgetArea, mTilesetDock);
 
     tabifyDockWidget(mMiniMapDock, mObjectsDock);
@@ -444,6 +452,9 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
             this, SLOT(autoMappingWarning()));
     connect(AutomappingManager::instance(), SIGNAL(errorsOccurred()),
             this, SLOT(autoMappingError()));
+
+    connect(mDiffDock, SIGNAL(addMapDocument(MapDocument*)),
+            this, SLOT(addMapDocument(MapDocument*)));
 }
 
 MainWindow::~MainWindow()
@@ -1544,6 +1555,7 @@ void MainWindow::mapDocumentChanged(MapDocument *mapDocument)
     mTilesetDock->setMapDocument(mMapDocument);
     mTerrainDock->setMapDocument(mMapDocument);
     mMiniMapDock->setMapDocument(mMapDocument);
+    mDiffDock->setMapDocument(mMapDocument);
     AutomappingManager::instance()->setMapDocument(mMapDocument);
     QuickStampManager::instance()->setMapDocument(mMapDocument);
 
