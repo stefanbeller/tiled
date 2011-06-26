@@ -107,6 +107,7 @@ public slots:
     bool saveFileAs();
     void saveAsImage();
     void exportAs();
+    void diffTo();
     void closeFile();
     void closeAllFiles();
 

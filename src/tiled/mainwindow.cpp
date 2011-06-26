@@ -28,6 +28,7 @@
 #include "ui_mainwindow.h"
 
 #include "aboutdialog.h"
+#include "addremovelayer.h"
 #include "addremovemapobject.h"
 #include "automap.h"
 #include "addremovetileset.h"
@@ -220,6 +221,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
     connect(mUi->actionSaveAs, SIGNAL(triggered()), SLOT(saveFileAs()));
     connect(mUi->actionSaveAsImage, SIGNAL(triggered()), SLOT(saveAsImage()));
     connect(mUi->actionExport, SIGNAL(triggered()), SLOT(exportAs()));
+    connect(mUi->actionDiffTo, SIGNAL(triggered()), SLOT(diffTo()));
     connect(mUi->actionClose, SIGNAL(triggered()), SLOT(closeFile()));
     connect(mUi->actionCloseAll, SIGNAL(triggered()), SLOT(closeAllFiles()));
     connect(mUi->actionQuit, SIGNAL(triggered()), SLOT(close()));
@@ -774,6 +776,95 @@ void MainWindow::exportAs()
     if (!chosenWriter->write(mMapDocument->map(), fileName)) {
         QMessageBox::critical(this, tr("Error Saving Map"),
                               chosenWriter->errorString());
+    }
+}
+
+void MainWindow::diffTo()
+{
+    QString filter = tr("All Files (*)");
+    filter += QLatin1String(";;");
+
+    QString selectedFilter;
+//    selectedFilter = tr("git diffs (*.patch)");
+//    filter += selectedFilter;
+//    filter += QLatin1String(";;");
+
+    selectedFilter = tr("Tiled map files (*.tmx)");
+    filter += selectedFilter;
+
+    selectedFilter = mSettings.value(QLatin1String("lastUsedOpenFilter"),
+                                     selectedFilter).toString();
+
+    const PluginManager *pm = PluginManager::instance();
+    QList<MapReaderInterface*> readers = pm->interfaces<MapReaderInterface>();
+    foreach (MapReaderInterface *reader, readers) {
+        filter += QLatin1String(";;");
+        filter += reader->nameFilter();
+    }
+
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open Map"),
+                                                    fileDialogStartLocation(),
+                                                    filter, &selectedFilter);
+    if (fileName.isEmpty())
+        return;
+
+    // When a particular filter was selected, use the associated reader
+    MapReaderInterface *mapReader = 0;
+    foreach (MapReaderInterface *reader, readers) {
+        if (selectedFilter == reader->nameFilter())
+            mapReader = reader;
+    }
+
+    TmxMapReader tmxMapReader;
+
+    if (!mapReader && !tmxMapReader.supportsFile(fileName)) {
+        // Try to find a plugin that implements support for this format
+        const PluginManager *pm = PluginManager::instance();
+        QList<MapReaderInterface*> readers =
+                pm->interfaces<MapReaderInterface>();
+
+        foreach (MapReaderInterface *reader, readers) {
+            if (reader->supportsFile(fileName)) {
+                mapReader = reader;
+                break;
+            }
+        }
+    }
+
+    if (!mapReader)
+        mapReader = &tmxMapReader;
+
+    Map *map = mapReader->read(fileName);
+    if (!map)
+        return;
+
+    Map *origMap = mMapDocument->map();
+
+    foreach (Tileset *t, map->tilesets()) {
+        Tileset *ts = t->findSimilarTileset(origMap->tilesets());
+        if (ts)
+            map->replaceTileset(t, ts);
+    }
+
+    foreach (Layer *origLayer, origMap->layers()) {
+        Layer* changedLayer = 0;
+        foreach (Layer *layer, map->layers())
+            if (layer->name() == origLayer->name())
+                changedLayer = layer;
+
+        if (changedLayer)
+            if (origLayer->asTileLayer() && changedLayer->asTileLayer()) {
+                TileLayer *origTL = origLayer->asTileLayer();
+                TileLayer *chTL = changedLayer->asTileLayer();
+
+                QRegion creg = origTL->computeDiffRegion(chTL);
+                TileLayer *add = changedLayer->asTileLayer()->copy(creg);
+                add->resize(origTL->bounds().size(),creg.boundingRect().topLeft());
+                add->setName(QLatin1String("++")+ origLayer->name());
+
+                QUndoStack *undo = mMapDocument->undoStack();
+                undo->push(new AddLayer(mMapDocument, origMap->indexOfLayer(origLayer) + 1, add));
+            }
     }
 }
 
