@@ -58,6 +58,8 @@
     <addaction name="actionSaveAsImage"/>
     <addaction name="actionExport"/>
     <addaction name="separator"/>
+    <addaction name="actionDiffTo"/>
+    <addaction name="separator"/>
     <addaction name="actionClose"/>
     <addaction name="actionCloseAll"/>
     <addaction name="actionQuit"/>
@@ -406,6 +408,11 @@
    </property>
    <property name="iconText">
     <string>Delete</string>
+   </property>
+  </action>
+  <action name="actionDiffTo">
+   <property name="text">
+    <string>Diff to...</string>
    </property>
   </action>
   <action name="actionHighlightCurrentLayer">

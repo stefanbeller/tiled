@@ -28,11 +28,13 @@
 #include "ui_mainwindow.h"
 
 #include "aboutdialog.h"
+#include "addremovelayer.h"
 #include "addremovemapobject.h"
 #include "automappingmanager.h"
 #include "addremovetileset.h"
 #include "clipboardmanager.h"
 #include "createobjecttool.h"
+#include "diffdock.h"
 #include "documentmanager.h"
 #include "editpolygontool.h"
 #include "eraser.h"
@@ -125,6 +127,8 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
     , mCurrentLayerLabel(new QLabel)
     , mZoomable(0)
     , mZoomComboBox(new QComboBox)
+    , mDiffDock(new DiffDock(this))
+    , mZoomLabel(new QLabel)
     , mStatusInfoLabel(new QLabel)
     , mAutomappingManager(new AutomappingManager(this))
     , mDocumentManager(DocumentManager::instance())
@@ -181,6 +185,10 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
     addDockWidget(Qt::RightDockWidgetArea, mObjectsDock);
     addDockWidget(Qt::RightDockWidgetArea, mMiniMapDock);
     addDockWidget(Qt::RightDockWidgetArea, mTerrainDock);
+    addDockWidget(Qt::RightDockWidgetArea, mDiffDock);
+    tabifyDockWidget(undoDock, mLayerDock);
+    tabifyDockWidget(undoDock, mDiffDock);
+
     addDockWidget(Qt::RightDockWidgetArea, mTilesetDock);
     addDockWidget(Qt::RightDockWidgetArea, propertiesDock);
     addDockWidget(Qt::RightDockWidgetArea, mConsoleDock);
@@ -480,6 +488,9 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
             this, SLOT(autoMappingWarning()));
     connect(mAutomappingManager, SIGNAL(errorsOccurred()),
             this, SLOT(autoMappingError()));
+
+    connect(mDiffDock, SIGNAL(addMapDocument(MapDocument*)),
+            this, SLOT(addMapDocument(MapDocument*)));
 }
 
 MainWindow::~MainWindow()
@@ -1150,7 +1161,7 @@ void MainWindow::addExternalTileset()
                                           tr("Tiled tileset files (*.tsx)"));
     if (fileNames.isEmpty())
         return;
-    
+
     QList<Tileset *> tilesets;
 
     foreach (QString fileName, fileNames) {
@@ -1163,12 +1174,12 @@ void MainWindow::addExternalTileset()
             return;
         } else {
             int result;
-            
+
             result = QMessageBox::warning(this, tr("Error Reading Tileset"),
                                           tr("%1: %2").arg(fileName, reader.errorString()),
                                           QMessageBox::Abort | QMessageBox::Ignore,
                                           QMessageBox::Ignore);
-            
+
             if (result == QMessageBox::Abort) {
                 // On abort, clean out any already loaded tilesets.
                 qDeleteAll(tilesets);
@@ -1176,7 +1187,7 @@ void MainWindow::addExternalTileset()
             }
         }
     }
-    
+
     QUndoStack *undoStack = mMapDocument->undoStack();
     undoStack->beginMacro(tr("Add %n Tileset(s)", "", tilesets.size()));
     foreach (Tileset *tileset, tilesets)
@@ -1567,6 +1578,7 @@ void MainWindow::mapDocumentChanged(MapDocument *mapDocument)
     mTilesetDock->setMapDocument(mapDocument);
     mTerrainDock->setMapDocument(mapDocument);
     mMiniMapDock->setMapDocument(mapDocument);
+    mDiffDock->setMapDocument(mapDocument);
     mTileAnimationEditor->setMapDocument(mapDocument);
     mTileCollisionEditor->setMapDocument(mapDocument);
     mToolManager->setMapDocument(mapDocument);

@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE map SYSTEM "http://mapeditor.org/dtd/1.0/map.dtd">
 <map version="1.0" orientation="orthogonal" width="40" height="40" tilewidth="32" tileheight="32">
  <tileset firstgid="1" source="desert.tsx"/>
  <layer name="Ground" width="40" height="40">
   <data encoding="base64" compression="zlib">
-   eJztmNkKwjAQRaN9cAPrAq5Yq3Xf6v9/nSM2VIbQJjEZR+nDwQZScrwztoORECLySBcIgZ7nc2y4KfyWDLx+Jb9nViNgDEwY+KioAXUgQN4+zpoCMwPmQAtoAx2CLFbA2oDEo9+hwG8DnIDtF/2K8ks086Tw2zH0uyMv7HcRr/6/EvvhnsPrsrxwX7rwU/0ODig/eV3mh3N1ld8eraWPaX6+64s9McesfrqcHfg1MpoifxcVEWjukyw+9AtFPl/I71pER3Of6j4bv7HI54s+MChhqLlPdZ/P3qMmFuo5h5NnTOhjM5tReN2yT51n5/v7J3F0vi46fk+ne7aX0i9l6If7mpufTX3f5wsqv9TAD2fJLT9VrTn7UeZnM5tR+v0LMQOHXwFnxe2/warGFRWf8QDjOLfP
+   eJztmH1PwjAQh08JvqGCmoAvEdGh4hvw/T+dt6yXXS5Ney1tGcn+eAJd2u3h13ZtmQPAPCPXyBiZZH5ODGuL30sHvA4lvzqrKTJD7jvgY+MIOUYGwjvHsx6QxwCekHPkAhkVyOIVeQugyui3cvgtkW/kfY9+rvwqZZ4l/D466LcVXtLvF5rx/1fYT445WfblJcdlCj/bPFiJ/Oi7z0/mmiq/T1Emn9D8cvev9JR8mf7T8pPA79RwBu1a5GKgrEc87+g3hnZ/Qb/VxUhZz9Yuxm8G7f7iBrn1cKesZ2uXc+yVZgH2fU6XPBcFfWL2Zr57nkA7t2O91uZT8+7k60/luCd5XUEzty+NI12Pcdb41U5bU9flR2cazkRcJ2eN2yaxH51paobMb8rKPkc5rlP6Sdchc5GO2nOjxo/vL7R+vL9tjj6/TYCfzDLUjxz53EmZn62vtX3Mx6KcN7n8Qt4Pct7wdVvTNmZvFurX06y5+3Y4FGRWXftvsO/jnp7d+Ac0dLMY
   </data>
  </layer>
 </map>

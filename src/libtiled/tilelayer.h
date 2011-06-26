@@ -35,6 +35,7 @@
 #include "layer.h"
 #include "tiled.h"
 
+#include <QList>
 #include <QMargins>
 #include <QString>
 #include <QVector>

@@ -50,6 +50,8 @@ namespace Internal {
 class AutomappingManager;
 class BucketFillTool;
 class CommandButton;
+class ClipboardManager;
+class DiffDock;
 class DocumentManager;
 class LayerDock;
 class MapDocumentActionHandler;
@@ -172,6 +174,8 @@ public slots:
     void onAnimationEditorClosed();
     void onCollisionEditorClosed();
 
+    void addMapDocument(MapDocument *mapDocument);
+
 private:
     /**
       * Asks the user whether the given \a mapDocument should be saved, when
@@ -203,7 +207,7 @@ private:
     void writeSettings();
     void readSettings();
 
-    void addMapDocument(MapDocument *mapDocument);
+
     QStringList recentFiles() const;
     QString fileDialogStartLocation() const;
 
@@ -227,6 +231,8 @@ private:
     QLabel *mCurrentLayerLabel;
     Zoomable *mZoomable;
     QComboBox *mZoomComboBox;
+    DiffDock *mDiffDock;
+    QLabel *mZoomLabel;
     QLabel *mStatusInfoLabel;
     QSettings mSettings;
     QToolButton *mRandomButton;
