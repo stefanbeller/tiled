@@ -81,21 +81,21 @@ unsigned int SmartTilingManager::getTileRelationH(Cell left, Cell right)
 {
     if (mHProb.contains(QPair<Cell, Cell>(left, right)))
         return mHProb[QPair<Cell, Cell>(left, right)];
-    return INT_MAX/16;
+    return 0;
 }
 
 unsigned int SmartTilingManager::getTileRelationV(Cell top, Cell bottom)
 {
     if (mVProb.contains(QPair<Cell, Cell>(top, bottom)))
         return mVProb[QPair<Cell, Cell>(top, bottom)];
-    return INT_MAX/16;
+    return 0;
 }
 
 unsigned int SmartTilingManager::getTileProb(Cell t)
 {
     if (mTileProb.contains(t))
         return mTileProb[t];
-    return INT_MAX/16;
+    return 0;
 }
 
 void SmartTilingManager::setTileRelationH(Cell left, Cell right, quint64 value)
@@ -140,53 +140,150 @@ QRegion neighbouringRegion(QRegion r, bool withEdges = false)
     return ret - r;
 }
 
-QList<QPoint> pointList(QRect r)
+QList<QPoint> pointList(QRegion region)
 {
     QList<QPoint> ret;
-    for (int x = r.left(); x <= r.right(); x++)
-        for (int y = r.top(); y <= r.bottom(); y++)
-            ret.append(QPoint(x,y));
+    foreach (QRect r, region.rects())
+        for (int x = r.left(); x <= r.right(); x++)
+            for (int y = r.top(); y <= r.bottom(); y++)
+                ret.append(QPoint(x,y));
     return ret;
 }
-#include <QDebug>
-void SmartTilingManager::smarttiling(QRegion reg, Layer *l)
+
+QList<Cell> SmartTilingManager::getCellList(QPoint p, TileLayer *l, QRegion ignore)
+{
+    QList<Cell> ret;
+    int reqNeighbourChanges = 4;
+    foreach (Cell c, mTileProb.keys()) {
+
+        int req = 4;
+        p.rx()--;
+        if (ignore.contains(p) && !getTileRelationH(l->cellAt(p), c))
+            req += 8;
+        if (l->contains(p) && getTileRelationH(l->cellAt(p), c))
+            req--;
+        p.rx()++;
+
+        p.ry()--;
+        if (ignore.contains(p) && !getTileRelationV(l->cellAt(p), c))
+            req += 8;
+        if (l->contains(p) && getTileRelationV(l->cellAt(p), c))
+            req--;
+        p.ry()++;
+
+        p.rx()++;
+        if (ignore.contains(p) && !getTileRelationH(c, l->cellAt(p)))
+        req += 8;
+        if (l->contains(p) && getTileRelationH(c, l->cellAt(p)))
+            req--;
+        p.rx()--;
+
+        p.ry()++;
+        if (ignore.contains(p) && !getTileRelationV(c, l->cellAt(p)))
+            req += 8;
+        if (l->contains(p) && getTileRelationV(c, l->cellAt(p)))
+            req--;
+        p.ry()--;
+
+        if (req < reqNeighbourChanges) {
+            ret.clear();
+            ret.append(c);
+            reqNeighbourChanges = req;
+        } else if (req == reqNeighbourChanges) {
+            ret.append(c);
+        }
+    }
+    return ret;
+}
+
+QList<QPoint> SmartTilingManager::getConflictPoints(QPoint p, Cell c, TileLayer *l)
+{
+    QList<QPoint> ret;
+    p.rx()--;
+    if (l->contains(p) && !getTileRelationH(l->cellAt(p), c))
+        ret.append(QPoint(p));
+    p.rx()++;
+
+    p.ry()--;
+    if (l->contains(p) && !getTileRelationV(l->cellAt(p), c))
+        ret.append(QPoint(p));
+    p.ry()++;
+
+    p.rx()++;
+    if (l->contains(p) && !getTileRelationH(c, l->cellAt(p)))
+        ret.append(QPoint(p));
+    p.rx()--;
+
+    p.ry()++;
+    if (l->contains(p) && !getTileRelationV(c, l->cellAt(p)))
+        ret.append(QPoint(p));
+    p.ry()--;
+
+
+    return ret;
+}
+
+Cell SmartTilingManager::getBestCell(QList<Cell> list, TileLayer* layer, QPoint p)
+{
+    Cell ret;
+    int bestfitvalue = INT_MAX;
+    foreach (Cell c, list) {
+        int fitvalue = 0;
+
+        p.rx()--;
+        if (layer->contains(p))
+            fitvalue += getTileRelationH(layer->cellAt(p), c);
+        p.rx()++;
+
+        p.ry()--;
+        if (layer->contains(p))
+            fitvalue += getTileRelationV(layer->cellAt(p), c);
+        p.ry()++;
+
+        p.rx()++;
+        if (layer->contains(p))
+            fitvalue += getTileRelationH(c, layer->cellAt(p));
+        p.rx()--;
+
+        p.ry()++;
+        if (layer->contains(p))
+            fitvalue += getTileRelationV(c, layer->cellAt(p));
+        p.ry()--;
+
+        if (fitvalue < bestfitvalue)
+            ret = c;
+    }
+    return ret;
+}
+
+void SmartTilingManager::smarttiling(QRegion reg, Layer *layer)
 {
     if (!mEnabled)
         return;
 
     QRegion doneRegion(reg); // this region is done and won't be touched any further
-    QRegion processingRegion(neighbouringRegion(doneRegion)); // currently processed
-    QRegion ignoreRegion(neighbouringRegion(reg, true));
-    ignoreRegion-=processingRegion;
-    ignoreRegion -=doneRegion;
-    QRegion newRegion(1,1,1,1); // after the current region, we should take a look here
+    QList<QPoint> fifo;
 
-    int i = 2;
-    while (!processingRegion.isEmpty() && i--) {
-        newRegion = QRegion();
+    TileLayer *l = layer->asTileLayer();
 
-        qDebug()<<"Regions:";
-        qDebug()<<"processingRegion"<<processingRegion;
-        qDebug()<<"doneRegion"<<doneRegion;
-        qDebug()<<"ignoreRegion"<<ignoreRegion;
+    foreach (QPoint p, pointList(neighbouringRegion(doneRegion)))
+        if (l->contains(p))
+            fifo.append(p);
 
+    while (!fifo.isEmpty()) {
+        QPoint p = fifo.takeFirst();
+        Cell bestcell = getBestCell(getCellList(p, l, doneRegion), l, p);
+        if (bestcell.tile) {
+            l->setCell(p.x(),p.y(), bestcell);
+            foreach (QPoint np, getConflictPoints(p, bestcell, l))
+                if (!doneRegion.contains(np) && l->contains(np) && !fifo.contains(np))
+                    fifo.append(np);
+        }
 
-        foreach (QRect rect, processingRegion.rects())
-            foreach (QPoint p, pointList(rect))
-                calculateTile(p.x(), p.y(), static_cast<TileLayer*>(l), &newRegion, ignoreRegion, doneRegion);
-
-//        foreach (QRect rect, processingRegion.rects())
-//            foreach (QPoint p, pointList(rect))
-//                calculateTile(p.x(), p.y(), static_cast<TileLayer*>(l), &newRegion, QRegion(), doneRegion);
-
-//        qDebug()<<"newRegion"<<newRegion;
-
-        doneRegion |= newRegion;
-        processingRegion |= neighbouringRegion(newRegion);
-        ignoreRegion = neighbouringRegion(newRegion, true) - processingRegion - doneRegion;
-        processingRegion -= doneRegion;
-        qDebug()<<"--------------------------------------------";
+        doneRegion += QRect(p,p);
+        mMapDocument->emitRegionChanged(doneRegion);
     }
+
     mMapDocument->emitRegionChanged(doneRegion);
 }
 
@@ -392,40 +489,51 @@ void SmartTilingManager::calculateRelation(Cell first, Cell second, bool vertica
         //ret += log2((cor[i]) * (cor[i]));
         ret+=abs((cor[i])*(cor[i]));
 
+    // make sure the relation is !=0
+
+    ret++;
     if (vertical)
         setTileRelationV(first, second, ret);
     else
         setTileRelationH(first, second, ret);
 }
 
-//void SmartTilingManager::addTile(Cell t)
-//{
-//    Tileset *ts = t.tile->tileset();
-//    for (int j = 0; j < ts->tileCount(); j++) {
-//        calculateRelation(t, ts->cellAt(j), false);
-//        calculateRelation(ts->cellAt(j), t, false);
-//        calculateRelation(t, ts->cellAt(j), true);
-//        calculateRelation(ts->cellAt(j), t, true);
-//    }
-//}
-
-//void SmartTilingManager::addTileset(Tileset *ts)
-//{
-//    for (int i = 0; i < ts->tileCount(); i++)
-//        addTile(ts->cellAt(i));
-//    for (int i = 0; i < ts->tileCount(); i++)
-//        mTileProb[ts->cellAt(i)]=1;
-//}
-
-void SmartTilingManager::addSmartTiles(TileLayer *stamp)
+void SmartTilingManager::addSmartTiles(TileLayer *layer)
 {
-    foreach (Cell t1, stamp->usedCells()) {
-        foreach (Cell t2, stamp->usedCells()) {
-            // need only 2 directions, since the other directions come in when
-            // t1 and t2 are swapped.
-            calculateRelation(t1, t2, false);
-            calculateRelation(t1, t2, true);
-        }
-        mTileProb[t1]=1;
+//    foreach (Cell t1, stamp->usedCells()) {
+//        foreach (Cell t2, stamp->usedCells()) {
+//            // need only 2 directions, since the other directions come in when
+//            // t1 and t2 are swapped.
+//            calculateRelation(t1, t2, false);
+//            calculateRelation(t1, t2, true);
+//        }
+//        mTileProb[t1]=1;
+//    }
+
+
+    foreach (QPoint p, pointList(layer->region())) {
+        QPoint orig(p);
+        p.rx()--;
+        if (layer->contains(p))
+            calculateRelation(layer->cellAt(p), layer->cellAt(orig), false);
+        p.rx()++;
+
+        p.ry()--;
+        if (layer->contains(p))
+            calculateRelation(layer->cellAt(p), layer->cellAt(orig), true);
+        p.ry()++;
+
+        p.rx()++;
+        if (layer->contains(p))
+            calculateRelation(layer->cellAt(orig), layer->cellAt(p), false);
+        p.rx()--;
+
+        p.ry()++;
+        if (layer->contains(p))
+            calculateRelation(layer->cellAt(orig), layer->cellAt(p), true);
+        p.ry()--;
+
+        mTileProb[layer->cellAt(orig)] = 1;
     }
 }
+

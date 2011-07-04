@@ -40,11 +40,6 @@ public:
 
     void setMapDocument(MapDocument *mapDocument);
 
-    /*deprecated, but same as addSmartTiles, bound to a whole tileset*/
-    //void addTileset(Tileset *ts);
-    /*deprecated*/
-    //void addTile(Cell t);
-
     /**
      * Adds all tiles found within the stamp tile layer to the smarttiling
      * manager. Between each of these tiles the relation in each direction is
@@ -53,19 +48,13 @@ public:
     void addSmartTiles(TileLayer *stamp);
     /**
      * Returns the relation between two tiles in horizontal mode. If these two
-     * tiles are not found within mHProb the return value is assumed to be as
-     * bad as possible.
-     * This is INT_MAX/16. (a huge number, but since some of these numbers are
-     * summed up, leave some even huger numbers, so we don't get overflows)
+     * tiles are not found within mHProb the return value is zero
      */
     unsigned int getTileRelationH(Cell left, Cell right);
 
     /**
      * Returns the relation between two tiles in vertical mode. If these two
-     * tiles are not found within mHProb the return value is assumed to be as
-     * bad as possible.
-     * This is INT_MAX/16. (a huge number, but since some of these numbers are
-     * summed up, leave some even huger numbers, so we don't get overflows)
+     * tiles are not found within mHProb the return value is zero.
      */
     unsigned int getTileRelationV(Cell top, Cell bottom);
 
@@ -118,6 +107,24 @@ private:
     void pixelLists(Cell first, Cell second, bool vertical,
                     int distFirst, int distSecond,
                     QList<QRgb> *destFirst, QList<QRgb> *destSecond);
+
+    /**
+     * Returns a list of cells, which fit a certain position.
+     * In the list there are all cells, which have a minimum of required changed
+     * neighbouring cells.
+     */
+    QList<Cell> getCellList(QPoint p, TileLayer *l, QRegion ignore);
+
+    /**
+     * returns the best cell based on the similarity to each neighbouring cell.
+     */
+    Cell getBestCell(QList<Cell> list, TileLayer* layer, QPoint p);
+
+    /**
+     * Returns a list of points which are unsolved, when cell c would be placed
+     * at point p within tilelayer l.
+     */
+    QList<QPoint> getConflictPoints(QPoint p, Cell c, TileLayer *l);
 
     /**
      * calculates the number of lines taken into account for calculating the
