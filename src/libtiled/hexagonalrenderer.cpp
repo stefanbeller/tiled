@@ -99,7 +99,7 @@ void HexagonalRenderer::drawTileLayer(QPainter *painter,
         for (int x = startX; x < endX; ++x) {
 
             // Compensate for the layer position
-            const Cell &cell = layer->cellAt(x - layer->pos().x(), y - layer->pos().y());
+            const Cell &cell = layer->cellAt(x - layer->position().x(), y - layer->position().y());
             if (cell.isEmpty())
                 continue;
 
