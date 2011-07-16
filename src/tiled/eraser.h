@@ -41,6 +41,9 @@ public:
 
     void languageChanged();
 
+signals:
+    void startCapture();
+
 protected:
     void tilePositionChanged(const QPoint &tilePos);
 

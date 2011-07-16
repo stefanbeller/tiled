@@ -57,6 +57,11 @@ void Eraser::mousePressed(QGraphicsSceneMouseEvent *event)
         mErasing = true;
         doErase(false);
     }
+    if (event->button() == Qt::RightButton) {
+        // user wants to capture new tiles and draw, so this tool is not
+        // needed anymore
+        emit startCapture();
+    }
 }
 
 void Eraser::mouseReleased(QGraphicsSceneMouseEvent *event)
