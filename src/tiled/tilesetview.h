@@ -61,6 +61,7 @@ protected:
 private slots:
     void editTileProperties();
     void editSmarttiling();
+    void selectAllTiles();
     void exportTileset();
     void importTileset();
     void toggleGrid();

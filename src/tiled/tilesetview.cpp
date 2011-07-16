@@ -27,6 +27,7 @@
 #include "propertiesdialog.h"
 #include "tmxmapwriter.h"
 #include "tile.h"
+#include "tilelayer.h"
 #include "tileset.h"
 #include "tilesetmodel.h"
 #include "utils.h"
@@ -38,6 +39,7 @@
 #include <QHeaderView>
 #include <QMenu>
 #include <QPainter>
+#include <QRegion>
 #include <QUndoCommand>
 #include <QWheelEvent>
 
@@ -226,6 +228,14 @@ void TilesetView::contextMenuEvent(QContextMenuEvent *event)
         menu.addSeparator();
         connect(smartTiling, SIGNAL(triggered()),
                 SLOT(editSmarttiling()));
+
+        QAction *selectAll = menu.addAction(propIcon,
+                                                 tr("Select &all these tiles"));
+        Utils::setThemeIcon(selectAll, "document-properties");
+        menu.addSeparator();
+        connect(selectAll, SIGNAL(triggered()),
+                SLOT(selectAllTiles()));
+
     }
 
     QIcon exportIcon(QLatin1String(":images/16x16/document-export.png"));
@@ -279,6 +289,19 @@ void TilesetView::editSmarttiling()
                                       tile,
                                       this);
     smartTilingViewer.exec();
+}
+
+void TilesetView::selectAllTiles()
+{
+    const TilesetModel *m = tilesetModel();
+    Tile *tile = m->tileAt(selectionModel()->currentIndex());
+
+    TileLayer *tl = mMapDocument->currentLayer()->asTileLayer();
+//    if ()
+//    QRegion mark;
+    //for (->
+    //mMapDocument->setTileSelection();
+
 }
 
 void TilesetView::exportTileset()
