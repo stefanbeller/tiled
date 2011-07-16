@@ -130,6 +130,12 @@ public:
     QRegion region() const;
 
     /**
+     * Calculates only that region occupied by all these cells which are part of
+     * the given set \a which
+     */
+    QRegion region(QSet<Cell> which) const;
+
+    /**
      * Returns a read-only reference to the cell at the given coordinates. The
      * coordinates have to be within this layer.
      */

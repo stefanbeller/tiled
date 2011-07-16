@@ -68,6 +68,29 @@ QRegion TileLayer::region() const
     return region;
 }
 
+QRegion TileLayer::region(QSet<Cell> which) const
+{
+    QRegion region;
+
+    for (int y = 0; y < mHeight; ++y) {
+        for (int x = 0; x < mWidth; ++x) {
+            if (which.contains(cellAt(x, y))) {
+                const int rangeStart = x;
+                for (++x; x <= mWidth; ++x) {
+                    if (x == mWidth || !which.contains(cellAt(x, y))) {
+                        const int rangeEnd = x;
+                        region += QRect(rangeStart + mX, y + mY,
+                                        rangeEnd - rangeStart, 1);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    return region;
+}
+
 void TileLayer::setCell(int x, int y, const Cell &cell)
 {
     Q_ASSERT(contains(x, y));
