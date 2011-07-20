@@ -303,6 +303,29 @@ static int luatiled_getTileId(lua_State *L)
     return 1;
 }
 
+static int luatiled_tileIndex(lua_State *L)
+{
+    int n = lua_gettop(L);  // Number of arguments
+
+    if (n == 2) {
+        if (lua_isstring(L, 2)) {
+            const char * key = luaL_checkstring(L, 2);
+            if (strcmp(key, "getId")==0)
+                lua_pushcfunction(L, luatiled_getTileId);
+            else {
+                lua_getmetatable(L, 1);
+                lua_pushvalue(L, 2);
+                lua_rawget(L, -2);
+            }
+        }
+    }
+    else
+        luaL_error(L, "Got %d arguments expected 2 (self,string)", n);
+
+    return 1;
+}
+
+
 static void registerLuaBinds(lua_State *L, Map *activeMap)
 {
     //Metatables for userdata
@@ -341,6 +364,7 @@ static void registerLuaBinds(lua_State *L, Map *activeMap)
     lua_pop(L, 1);
 
     luaL_Reg tile_funcs[] = {
+        {"__index", luatiled_tileIndex},
         {"getId", luatiled_getTileId},
         {NULL, NULL}
     };
