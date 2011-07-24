@@ -175,6 +175,8 @@ static int luatiled_qtprint (lua_State *L) {
 
 void ScriptDock::runScript()
 {
+    QHash<void*,int> luaReferenceCache;
+
     mOutputArea->clear();
 
     /* the Lua interpreter */
@@ -185,6 +187,10 @@ void ScriptDock::runScript()
 
     /* load Lua base libraries */
     luaL_openlibs(L);
+
+    lua_pushstring(L, "__luarefcache__");
+    lua_pushlightuserdata(L, reinterpret_cast<void*>(&luaReferenceCache));
+    lua_settable(L, LUA_REGISTRYINDEX);
 
     lua_pushstring(L, "__scriptdock__");
     lua_pushlightuserdata(L, reinterpret_cast<void*>(mOutputArea));

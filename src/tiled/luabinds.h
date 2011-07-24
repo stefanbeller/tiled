@@ -41,16 +41,26 @@ using namespace Tiled::Internal;
 
 
 #define CREATEBIND(classname) \
-static int luatiled_create##classname (lua_State *L, classname *map) { \
-    lua_newtable(L); \
-    lua_getglobal(L, #classname); \
-    lua_setmetatable(L, -2); \
-    lua_pushstring(L, "__self"); \
-    classname **luaMap = (classname **)lua_newuserdata(L, sizeof(classname *)); \
-    *luaMap = map; \
-    luaL_getmetatable(L, "Tiled."#classname); \
-    lua_setmetatable(L, -2); \
-    lua_rawset(L, -3); \
+static int luatiled_create##classname (lua_State *L, classname *obj) { \
+    lua_pushstring(L, "__luarefcache__"); \
+    lua_gettable(L, LUA_REGISTRYINDEX); \
+    QHash<void*,int>* luaReferenceCache = reinterpret_cast<QHash<void*,int>*>(lua_touserdata(L, -1)); \
+    if(luaReferenceCache->contains((void*)obj)){ \
+        int luaRef = luaReferenceCache->value((void*)obj); \
+        lua_rawgeti(L, LUA_REGISTRYINDEX, luaRef); \
+    } else { \
+        lua_newtable(L); \
+        lua_getglobal(L, #classname); \
+        lua_setmetatable(L, -2); \
+        lua_pushstring(L, "__self"); \
+        classname **luaObj= (classname **)lua_newuserdata(L, sizeof(classname *)); \
+        *luaObj = obj; \
+        luaL_getmetatable(L, "Tiled."#classname); \
+        lua_setmetatable(L, -2); \
+        lua_rawset(L, -3); \
+        lua_pushvalue(L, -1); \
+        luaReferenceCache->insert((void*)obj, luaL_ref(L, LUA_REGISTRYINDEX)); \
+    } \
     return 1; \
 } \
 classname* check##classname(lua_State* L, int index) { \
