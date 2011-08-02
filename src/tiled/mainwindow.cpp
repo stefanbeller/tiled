@@ -900,7 +900,7 @@ void MainWindow::diffTo()
                 add->setName(QLatin1String("++")+ origLayer->name());
 
                 QUndoStack *undo = mMapDocument->undoStack();
-                undo->push(new AddLayer(mMapDocument, origMap->indexOfLayer(origLayer) + 1, add));
+                undo->push(new AddLayer(mMapDocument, origMap->layers().indexOf(origLayer) + 1, add));
             }
     }
 }
