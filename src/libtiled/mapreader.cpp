@@ -420,6 +420,15 @@ void MapReaderPrivate::readLayerData(TileLayer *tileLayer)
                 uint gid = atts.value(QLatin1String("gid")).toString().toUInt();
                 tileLayer->setCell(x, y, cellForGid(gid));
 
+                Properties p;
+                QXmlStreamAttributes::const_iterator it = atts.constBegin();
+                QXmlStreamAttributes::const_iterator it_end = atts.constEnd();
+                for (; it != it_end; ++it) {
+                    if (it->name().toString().compare(QLatin1String("gid"),
+                                  Qt::CaseInsensitive)!=0)
+                        p.insert(it->name().toString(),it->value().toString());
+                }
+                tileLayer->getCellAt(x,y)->setProperties( p );
                 x++;
                 if (x >= tileLayer->width()) {
                     x = 0;
@@ -427,6 +436,9 @@ void MapReaderPrivate::readLayerData(TileLayer *tileLayer)
                 }
 
                 xml.skipCurrentElement();
+            } else if (xml.name() == QLatin1String("properties")) {
+                xml.raiseError(tr("Reading Properties"));
+                tileLayer->getCellAt(x, y)->mergeProperties(readProperties());
             } else {
                 readUnknownElement();
             }

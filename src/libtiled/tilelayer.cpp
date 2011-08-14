@@ -105,6 +105,13 @@ void TileLayer::setCell(int x, int y, const Cell &cell)
 
         if (mMap)
             mMap->adjustDrawMargins(drawMargins());
+
+        //set the cell properties here from the tile.  these are the defaults.
+        //they will be overwritten by the UI form for cell properties.
+        //!fixme: not working
+        Properties p = cell.properties();
+        p.clear();
+        Tile *t = cell.tile;
     }
 
     mGrid[x + y * mWidth] = cell;

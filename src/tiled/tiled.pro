@@ -43,6 +43,7 @@ SOURCES += aboutdialog.cpp \
     automapperwrapper.cpp \
     automappingmanager.cpp \
     brushitem.cpp \
+    cellpropertiestool.cpp \
     documentmanager.cpp \
     filesystemwatcher.cpp \
     languagemanager.cpp \
@@ -131,6 +132,7 @@ HEADERS += aboutdialog.h \
     automapperwrapper.h \
     automappingmanager.h \
     brushitem.h \
+    cellpropertiestool.h \
     documentmanager.h \
     filesystemwatcher.h \
     languagemanager.h \
@@ -221,7 +223,6 @@ HEADERS += aboutdialog.h \
 macx {
     OBJECTIVE_SOURCES += macsupport.mm
 }
-
 
 FORMS += aboutdialog.ui \
     mainwindow.ui \

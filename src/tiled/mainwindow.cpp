@@ -74,6 +74,7 @@
 #include "utils.h"
 #include "zoomable.h"
 #include "commandbutton.h"
+#include "cellpropertiestool.h"
 
 #ifdef Q_WS_MAC
 #include "macsupport.h"
@@ -338,6 +339,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
     toolManager->registerTool(mBucketFillTool);
     toolManager->registerTool(new Eraser(this));
     toolManager->registerTool(new TileSelectionTool(this));
+    toolManager->registerTool(new CellPropertiesTool(this));
     toolManager->addSeparator();
     toolManager->registerTool(new ObjectSelectionTool(this));
     toolManager->registerTool(new EditPolygonTool(this));
