@@ -2,6 +2,7 @@
  * cellpropertiestool.cpp
  * Copyright 2009-2010, Thorbjørn Lindeijer <thorbjorn@lindeijer.nl>
  * Copyright 2010 Stefan Beller <stefanbeller@googlemail.com>
+ * Copyright 2011 Dan Danese <biouxtai@danese.us>
  *
  * This file is part of Tiled.
  *
@@ -48,29 +49,25 @@ CellPropertiesTool::~CellPropertiesTool()
 
 void CellPropertiesTool::mouseReleased(QGraphicsSceneMouseEvent *event)
 {
-	if (event->button() == Qt::LeftButton)
-	{
-	}
+    if (event->button() == Qt::LeftButton) {
+        // TODO
+    }
 }
 
 void CellPropertiesTool::mousePressed(QGraphicsSceneMouseEvent *event)
 {
-    if (event->button() == Qt::LeftButton) 
-    {
-	    TileLayer *tileLayer = currentTileLayer();
-	    Q_ASSERT(tileLayer);
-	
-	    const QPoint tilePos = tilePosition();
+    if (event->button() == Qt::LeftButton) {
+            TileLayer *tileLayer = currentTileLayer();
+            Q_ASSERT(tileLayer);
 
-		Cell *cell = tileLayer->getCellAt(tilePos.x(),tilePos.y());
-		
-	    PropertiesDialog propertiesDialog(tr("Cell"),
-	                                      cell,
-	                                      mapDocument()->undoStack(),
-	                                      0);
-	    propertiesDialog.exec();
+            const QPoint tilePos = tilePosition();
+
+            Cell *cell = tileLayer->getCellAt(tilePos.x(),tilePos.y());
+
+            PropertiesDialog propertiesDialog(tr("Cell"), cell,
+                                              mapDocument()->undoStack(), 0);
+            propertiesDialog.exec();
     }
-    
 }
 
 void CellPropertiesTool::tilePositionChanged(const QPoint &)

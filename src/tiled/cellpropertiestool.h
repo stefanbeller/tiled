@@ -2,6 +2,7 @@
  * cellpropertiestool.h
  * Copyright 2009-2010, Thorbjørn Lindeijer <thorbjorn@lindeijer.nl>
  * Copyright 2010 Stefan Beller <stefanbeller@googlemail.com>
+ * Copyright 2011 Dan Danese <biouxtai@danese.us>
  *
  * This file is part of Tiled.
  *
@@ -42,13 +43,13 @@ public:
 
     void mousePressed(QGraphicsSceneMouseEvent *event);
     void mouseReleased(QGraphicsSceneMouseEvent *event);
-	void languageChanged();
-	void tilePositionChanged(const QPoint &tilePos);
-	
+    void languageChanged();
+    void tilePositionChanged(const QPoint &tilePos);
+
 };
 
 } // namespace Internal
 } // namespace Tiled
 
 
-#endif //CELLPROPERTIESTOOL_H
+#endif // CELLPROPERTIESTOOL_H

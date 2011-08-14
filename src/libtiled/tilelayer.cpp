@@ -112,6 +112,7 @@ void TileLayer::setCell(int x, int y, const Cell &cell)
         Properties p = cell.properties();
         p.clear();
         Tile *t = cell.tile;
+        p.merge(t->properties());
     }
 
     mGrid[x + y * mWidth] = cell;

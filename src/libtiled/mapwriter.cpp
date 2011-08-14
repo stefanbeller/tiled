@@ -310,7 +310,7 @@ void MapWriterPrivate::writeTileLayer(QXmlStreamWriter &w,
                 Properties::const_iterator it_end = tileLayer->cellAt(x, y).properties().constEnd();
                 for (; it != it_end; ++it) {
                     // output the tile information
-                    w.writeAttribute(it.key(),it.value());    
+                    w.writeAttribute(it.key(), it.value());
                 }
 
                 w.writeEndElement();

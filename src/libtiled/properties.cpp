@@ -41,18 +41,15 @@ void Properties::merge(const Properties &other)
     }
 }
 
-//This will make sure that the key being added is not already present
-//in the map.  This will slow it some since it has to search for each key
-//but the hit shouldn't be noticable.
+// This will make sure that the key being added is not already present
+// in the map.  This will slow it some since it has to search for each key
+// but the hit shouldn't be noticable.
 void Properties::uniqueMerge(const Properties &other)
 {
     // Based on QMap::unite, but using insert instead of insertMulti
     const_iterator it = other.constEnd();
     const const_iterator b = other.constBegin();
-    while (it != b) {
-        --it;
-        if (!contains(it.key())) {
+    while (it-- != b)
+        if (!contains(it.key()))
             insert(it.key(), it.value());
-        }
-    }
-}    
+}

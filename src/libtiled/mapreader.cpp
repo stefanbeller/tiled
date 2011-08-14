@@ -425,10 +425,11 @@ void MapReaderPrivate::readLayerData(TileLayer *tileLayer)
                 QXmlStreamAttributes::const_iterator it_end = atts.constEnd();
                 for (; it != it_end; ++it) {
                     if (it->name().toString().compare(QLatin1String("gid"),
-                                  Qt::CaseInsensitive)!=0)
-                        p.insert(it->name().toString(),it->value().toString());
+                                  Qt::CaseInsensitive) != 0)
+                        p.insert(it->name().toString(), it->value().toString());
                 }
-                tileLayer->getCellAt(x,y)->setProperties( p );
+
+                tileLayer->getCellAt(x, y)->setProperties(p);
                 x++;
                 if (x >= tileLayer->width()) {
                     x = 0;
