@@ -1,6 +1,7 @@
 /*
  * main.cpp
  * Copyright 2008-2010, Thorbjørn Lindeijer <thorbjorn@lindeijer.nl>
+ * Copyright 2011, Stefan Beller <stefanbeller@googlemail.com>
  *
  * This file is part of Tiled.
  *
@@ -48,17 +49,17 @@ struct CommandLineOptions {
 
 void showHelp()
 {
-    // TODO: Make translatable
-    qWarning() <<
-            "Usage: tiled [option] [files...]\n\n"
-            "Options:\n"
-            "  -h --help    : Display this help\n"
-            "  -v --version : Display the version";
+    qWarning()
+            << qPrintable(QApplication::tr(
+                              "Usage: tiled [option] [files...]\n\n"
+                              "Options:\n"
+                              "  -h --help    : Display this help\n"
+                              "  -v --version : Display the version"));
 }
 
 void showVersion()
 {
-    qWarning() << "Tiled (Qt) Map Editor"
+    qWarning() << qPrintable(QApplication::tr("Tiled (Qt) Map Editor"))
             << qPrintable(QApplication::applicationVersion());
 }
 
@@ -77,7 +78,7 @@ void parseCommandLineArguments(CommandLineOptions &options)
                 || arg == QLatin1String("-v")) {
             options.showVersion = true;
         } else if (arg.at(0) == QLatin1Char('-')) {
-            qWarning() << "Unknown option" << arg;
+            qWarning() << qPrintable(QApplication::tr("Unknown option")) << arg;
             options.showHelp = true;
         } else {
             options.filesToOpen.append(arg);
