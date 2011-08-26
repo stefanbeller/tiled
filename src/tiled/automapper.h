@@ -325,6 +325,11 @@ private:
      */
     int mAutoMappingRadius;
 
+    /**
+     * Determines if a rule is allowed to overlap itself.
+     */
+    bool mNoOverlappingRules;
+
     QSet<QString> mTouchedLayers;
 
     QString mError;
