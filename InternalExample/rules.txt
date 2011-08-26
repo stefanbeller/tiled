@@ -1,0 +1,28 @@
+#rules for homogeneous spaces
+./rules/ruleSet0.tmx
+
+#basic boundary rules for ground
+./rules/ruleSet1.tmx
+
+#additive rules for ground (concave corner)
+./rules/ruleSet2.tmx
+
+#rules for diagonals
+#./rules/ruleSet3a.tmx
+
+#stone-on-grass
+#./rules/ruleSet4a.tmx
+
+#rules for diagonals and "U" shape,
+#./rules/ruleSet5a.tmx
+
+
+
+
+
+
+
+
+
+
+
