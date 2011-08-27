@@ -2,10 +2,10 @@
 How to create a Windows installer for Tiled
 ===============================================================================
 Prerequisites:
-	* Qt is installed
-	* MinGW is installed
-	* NSIS in installed
-	* Tiled executable in release mode has already been built
+    * Qt is installed
+    * MinGW is installed
+    * NSIS in installed
+    * Tiled executable in release mode has already been built
 
 Tiled's windows installer is created using NSIS. You thus need to
 install NSIS first if you want to build your custom windows installer for it.

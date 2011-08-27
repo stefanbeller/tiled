@@ -1,3 +1,7 @@
+0.7.x_lonecoder (28 August 2011)
+* Added the "NoOverlappingRules" feature to rulemaps in Automapping
+* and more
+
 0.7.0 (20 July 2011)
 * Added support for horizontal and vertical flipping of tiles
 * Added copy/paste support for objects
