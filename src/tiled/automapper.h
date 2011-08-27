@@ -81,7 +81,8 @@ public:
     /**
      * This needs to be called directly before the autoMap call.
      * It sets up some data structures which change rapidly, so it is quite
-     * painful to keep these datastructures up to date all time.
+     * painful to keep these datastructures up to date all time. (indices of
+     * layers of the working map)
      */
     bool prepareAutoMap();
 
@@ -219,19 +220,19 @@ private:
     QRegion createRule(int x, int y) const;
 
     /**
-     * cleans up the data structes filled by setupRuleMapLayers(),
+     * Cleans up the data structes filled by setupRuleMapLayers(),
      * so the next rule can be processed.
      */
     void cleanUpRuleMapLayers();
 
     /**
-     * cleans up the data structes filled by setupTilesets(),
+     * Cleans up the data structes filled by setupTilesets(),
      * so the next rule can be processed.
      */
     void cleanTilesets();
 
     /**
-     * checks if this the rules from the given rules map could be used anyway
+     * Checks if this the rules from the given rules map could be used anyway
      * by comparing the used tilesets of the set layer and ruleset layer.
      */
     bool setupRulesUsedCheck();
@@ -300,10 +301,10 @@ private:
     QList<QRegion> mRules;
 
     /**
-     * The inner List of Tuples with layers is needed for translating
+     * The inner list of tuples with layers is needed for translating
      * tile layers from mMapRules to mMapWork.
      *
-     * QPairs first entry is the  pointer to the layer in the rulemap. The
+     * QPairs first entry is the pointer to the layer in the rulemap. The
      * pointer to the layer within the working map is not hardwired, but the
      * position in the layerlist, where it was found the last time.
      * This loosely bound pointer ensures we will get the right layer, since we

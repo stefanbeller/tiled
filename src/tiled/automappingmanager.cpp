@@ -132,7 +132,6 @@ void AutomappingManager::autoMapInternal(QRegion where, Layer *setLayer)
     }
 
     Map *map = mMapDocument->map();
-
     QString layer = map->layerAt(mMapDocument->currentLayerIndex())->name();
 
     // use a pointer to the region, so each automapper can manipulate it and the

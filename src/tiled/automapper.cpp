@@ -344,8 +344,8 @@ bool AutoMapper::setupMissingLayers()
             name = name.right(name.length()-pos);
 
             if (i->second >= mMapWork->layerCount() ||
-                i->second == -1 ||
-                    name!= mMapWork->layerAt(i->second)->name()) {
+                    i->second == -1 ||
+                    name != mMapWork->layerAt(i->second)->name()) {
 
                 int index = mMapWork->indexOfLayer(name);
                 if (index == -1)  {
