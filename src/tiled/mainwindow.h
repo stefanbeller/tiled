@@ -87,6 +87,8 @@ public:
      */
     void openLastFiles();
 
+    void setZoomScale(qreal scale);
+
 public slots:
     bool openFile(const QString &fileName);
 

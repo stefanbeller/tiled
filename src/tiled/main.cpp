@@ -44,6 +44,10 @@ struct CommandLineOptions {
 
     bool showHelp;
     bool showVersion;
+    bool SaveAsImage;
+    bool SaveAsImageShowTileGrid;
+    bool SaveAsImageOnlyVisisbleLayers;
+    qreal scale;
     QStringList filesToOpen;
 };
 
@@ -53,8 +57,9 @@ void showHelp()
             << qPrintable(QApplication::tr(
                               "Usage: tiled [option] [files...]\n\n"
                               "Options:\n"
-                              "  -h --help    : Display this help\n"
-                              "  -v --version : Display the version"));
+                              "  -h --help        : Display this help\n"
+                              "  -v --version     : Display the version\n"
+                              "  -s --saveAsImage : Saves all loaded Maps as Image"));
 }
 
 void showVersion()
@@ -77,7 +82,29 @@ void parseCommandLineArguments(CommandLineOptions &options)
         } else if (arg == QLatin1String("--version")
                 || arg == QLatin1String("-v")) {
             options.showVersion = true;
-        } else if (arg.at(0) == QLatin1Char('-')) {
+        } else if (arg == QLatin1String("--saveAsImage")
+                   || arg == QLatin1String("-s")) {
+            options.SaveAsImage = true;
+        } else if (arg == QLatin1String("--enableTileGrid")
+                   || arg == QLatin1String("-g")) {
+            options.SaveAsImageShowTileGrid = true;
+        } else if (arg == QLatin1String("--showVisibleLayersOnly")
+                   || arg == QLatin1String("-V")) {
+            options.SaveAsImageOnlyVisisbleLayers = true;
+        } else if (arg == QLatin1String("--scale")
+                   || arg == QLatin1String("-s")) {
+            bool ok = true;
+            const int scalePosition = i + 1;
+            if (arguments.size() < scalePosition) {
+                ok = false;
+            } else {
+                options.scale = arguments.at(scalePosition).toDouble(&ok);
+            }
+            if (!ok)
+                qWarning()<< qPrintable(QApplication::tr("Scale argument invalid!"));
+
+        }
+        else if (arg.at(0) == QLatin1Char('-')) {
             qWarning() << qPrintable(QApplication::tr("Unknown option")) << arg;
             options.showHelp = true;
         } else {
@@ -128,8 +155,12 @@ int main(int argc, char *argv[])
                      &w, SLOT(openFile(QString)));
 
     if (!options.filesToOpen.empty()) {
-        foreach (const QString &fileName, options.filesToOpen)
+        foreach (const QString &fileName, options.filesToOpen) {
             w.openFile(fileName);
+            if (options.scale)
+                w.setZoomScale(options.scale);
+
+        }
     } else {
         w.openLastFiles();
     }
