@@ -28,6 +28,7 @@
 
 #include <QAbstractItemModel>
 #include <QAction>
+#include <QEvent>
 #include <QFileSystemModel>
 #include <QMenu>
 #include <QToolBar>
@@ -86,6 +87,12 @@ ProjectDock::ProjectDock(ProjectTreeModel *m, QWidget *parent)
 
     connect (mTreeView, SIGNAL(doubleClicked(QModelIndex)),
              SLOT(doubleClick(QModelIndex)));
+    retranslateUi();
+}
+
+ProjectDock::~ProjectDock()
+{
+    delete mTreeView;
 }
 
 void ProjectDock::doubleClick(const QModelIndex &index)
@@ -97,9 +104,19 @@ void ProjectDock::doubleClick(const QModelIndex &index)
         emit openFile(pti->fullPath());
 }
 
-ProjectDock::~ProjectDock()
+void ProjectDock::retranslateUi()
 {
-    delete mTreeView;
+    setWindowTitle(tr("Projects"));
 }
 
-
+void ProjectDock::changeEvent(QEvent *e)
+{
+    QDockWidget::changeEvent(e);
+    switch (e->type()) {
+    case QEvent::LanguageChange:
+        retranslateUi();
+        break;
+    default:
+        break;
+    }
+}

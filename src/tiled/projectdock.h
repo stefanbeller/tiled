@@ -40,6 +40,8 @@ class ProjectDock  : public QDockWidget
 public:
     ProjectDock(ProjectTreeModel *m, QWidget *parent = 0);
     ~ProjectDock();
+protected:
+    void changeEvent(QEvent *e);
 
 signals:
     void openFile(QString file);
@@ -47,8 +49,8 @@ signals:
 private slots:
     void doubleClick(const QModelIndex &index);
 
-
 private:
+    void retranslateUi();
     QTreeView *mTreeView;
     ProjectTreeModel *mProjectTreeModel;
 
