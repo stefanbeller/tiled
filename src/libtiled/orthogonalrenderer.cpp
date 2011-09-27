@@ -285,8 +285,20 @@ void OrthogonalRenderer::drawMapObject(QPainter *painter,
     rect.moveTopLeft(QPointF(0, 0));
 
     if (object->tile()) {
+        int paintOriginX;
+        int paintOriginY;
         const QPixmap &img = object->tile()->image();
-        const QPoint paintOrigin(0, 0);
+        switch(object->alignment()) {
+        case MapObject::BottomLeft:
+            paintOriginX = 0;
+            paintOriginY = 0;
+        default:
+        case MapObject::TopLeft:
+            paintOriginX = 0;
+            paintOriginY = -img.height();
+        }
+
+        const QPoint paintOrigin(paintOriginX, paintOriginY);
         painter->drawPixmap(paintOrigin, img);
 
         QPen pen(Qt::SolidLine);
