@@ -67,6 +67,23 @@ public:
     };
 
     /**
+     * Enumerates all possible alignments.
+     * The alignment is seen from point of view of this object.
+     * TopLeft is default, meaning its origin is placed at the upper left
+     * corner.
+     */
+    enum Alignment {
+        Top,
+        TopLeft,
+        Left,
+        BottomLeft,
+        Bottom,
+        BottomRight,
+        Right,
+        TopRight
+    };
+
+    /**
      * Default constructor.
      */
     MapObject();
@@ -134,6 +151,17 @@ public:
      * Sets the x position of this object.
      */
     void setY(qreal y) { mPos.setY(y); }
+
+    /**
+     * Sets the alignment of this object.
+     */
+    void setAlignment(Alignment alignment)
+    { mAlignment = alignment; }
+
+    /**
+     * Returns the alignment of this object.
+     */
+    Alignment alignment() const { return mAlignment; }
 
     /**
      * Returns the size of this object.
@@ -237,6 +265,7 @@ private:
     Shape mShape;
     Tile *mTile;
     ObjectGroup *mObjectGroup;
+    Alignment mAlignment;
 };
 
 } // namespace Tiled
