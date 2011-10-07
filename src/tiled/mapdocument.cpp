@@ -104,6 +104,7 @@ bool MapDocument::save(QString *error)
 
 bool MapDocument::save(const QString &fileName, QString *error)
 {
+    emit aboutToBeSaved();
     TmxMapWriter mapWriter;
 
     if (!mapWriter.write(map(), fileName)) {
@@ -114,6 +115,7 @@ bool MapDocument::save(const QString &fileName, QString *error)
 
     undoStack()->setClean();
     setFileName(fileName);
+    emit fileSaved();
 
     return true;
 }

@@ -13,7 +13,7 @@ Michael Woerister (improvements to the object properties dialog)
 Roderic Morris    (added many icons and initial object group support)
 Stefan Beller     (added the automap feature, quick stamps, lines/circles
                    support for multiple maps, random mode for stamp tool and
-                   bucketfill tool)
+                   bucketfill tool, detecting changed files on disc)
 Alexander Kuhrt <alex@qrt.de>
 
 Translators:

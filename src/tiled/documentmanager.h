@@ -1,6 +1,6 @@
 /*
  * documentmanager.h
- * Copyright 2010, Stefan Beller <stefanbeller@googlemail.com>
+ * Copyright 2010-2011, Stefan Beller <stefanbeller@googlemail.com>
  * Copyright 2010, Thorbjørn Lindeijer <thorbjorn@lindeijer.nl>
  *
  * This file is part of Tiled.
@@ -29,6 +29,7 @@
 #include <QList>
 #include <QPair>
 
+class QSignalMapper;
 class QTabWidget;
 class QUndoGroup;
 
@@ -38,6 +39,7 @@ class Tileset;
 
 namespace Internal {
 
+class FileSystemWatcher;
 class MapDocument;
 class MapScene;
 class MapView;
@@ -143,6 +145,9 @@ private slots:
     void currentIndexChanged();
     void setSelectedTool(AbstractTool *tool);
     void updateDocumentTab();
+    void addReloadWarning(MapDocument *whichDocument);
+    void removeReloadWarning(QObject *whichObject);
+    void fileChanged(const QString &fileName);
 
 private:
     DocumentManager(QObject *parent = 0);
@@ -154,6 +159,9 @@ private:
     QUndoGroup *mUndoGroup;
     AbstractTool *mSelectedTool;
     MapScene *mSceneWithTool;
+
+    FileSystemWatcher *mFileSystemWatcher;
+    QSignalMapper *mSignalMapper;
 
     static DocumentManager *mInstance;
 };

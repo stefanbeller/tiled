@@ -237,7 +237,23 @@ public:
 
 signals:
     void fileNameChanged();
+    /**
+     * Emitted when the modified attribute is changed. This happens when the
+     * user either modifies the map or when the user undoes changes back to its
+     * original state.
+     */
     void modifiedChanged();
+
+    /**
+     * Emitted just before a the document is saved to disc.
+     */
+    void aboutToBeSaved();
+
+    /**
+     * Emitted when the file is being saved. When this signal is emitted, the
+     * content of the map stored on disc is the same as in tiled.
+     */
+    void fileSaved();
 
     /**
      * Emitted when the selected tile region changes. Sends the currently

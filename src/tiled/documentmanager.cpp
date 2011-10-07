@@ -1,6 +1,6 @@
 /*
  * documentmanager.cpp
- * Copyright 2010, Stefan Beller <stefanbeller@googlemail.com>
+ * Copyright 2010-2011, Stefan Beller <stefanbeller@googlemail.com>
  * Copyright 2010, Thorbjørn Lindeijer <thorbjorn@lindeijer.nl>
  *
  * This file is part of Tiled.
@@ -22,12 +22,17 @@
 #include "documentmanager.h"
 
 #include "abstracttool.h"
+#include "filesystemwatcher.h"
 #include "maprenderer.h"
 #include "toolmanager.h"
 
+#include <QPushButton>
+#include <QFileInfo>
+#include <QObjectList>
+#include <QSignalMapper>
 #include <QTabWidget>
 #include <QUndoGroup>
-#include <QFileInfo>
+#include <QVBoxLayout>
 
 using namespace Tiled;
 using namespace Tiled::Internal;
@@ -53,6 +58,8 @@ DocumentManager::DocumentManager(QObject *parent)
     , mUndoGroup(new QUndoGroup(this))
     , mSelectedTool(0)
     , mSceneWithTool(0)
+    , mFileSystemWatcher(new FileSystemWatcher)
+    , mSignalMapper(new QSignalMapper)
 {
     mTabWidget->setDocumentMode(true);
     mTabWidget->setTabsClosable(true);
@@ -66,12 +73,18 @@ DocumentManager::DocumentManager(QObject *parent)
     setSelectedTool(toolManager->selectedTool());
     connect(toolManager, SIGNAL(selectedToolChanged(AbstractTool*)),
             SLOT(setSelectedTool(AbstractTool*)));
+
+    connect(mFileSystemWatcher, SIGNAL(fileChanged(QString)),
+            SLOT(fileChanged(QString)));
+    connect(mSignalMapper, SIGNAL(mapped(QObject*)),
+            this, SLOT(removeReloadWarning(QObject*)));
 }
 
 DocumentManager::~DocumentManager()
 {
     // All documents should be closed gracefully beforehand
     Q_ASSERT(mDocuments.isEmpty());
+    delete mFileSystemWatcher;
     delete mTabWidget;
 }
 
@@ -91,7 +104,11 @@ MapDocument *DocumentManager::currentDocument() const
 
 MapView *DocumentManager::currentMapView() const
 {
-    return static_cast<MapView*>(mTabWidget->currentWidget());
+    const QWidget *w = mTabWidget->currentWidget();
+    if (!w)
+        return 0;
+    const QObjectList children = w->children();
+    return static_cast<MapView*>(children.at(1));
 }
 
 MapScene *DocumentManager::currentMapScene() const
@@ -150,18 +167,27 @@ void DocumentManager::addDocument(MapDocument *mapDocument)
     mDocuments.append(mapDocument);
     mUndoGroup->addStack(mapDocument->undoStack());
 
-    MapView *view = new MapView(mTabWidget);
+    QWidget *centralWidget = new QWidget(mTabWidget);
+    centralWidget->setLayout(new QVBoxLayout());
+    MapView *view = new MapView(centralWidget);
     MapScene *scene = new MapScene(view); // scene is owned by the view
+    centralWidget->layout()->addWidget(view);
 
     scene->setMapDocument(mapDocument);
     view->setScene(scene);
 
     const int documentIndex = mDocuments.size() - 1;
 
-    mTabWidget->addTab(view, mapDocument->displayName());
+    mTabWidget->addTab(centralWidget, mapDocument->displayName());
     mTabWidget->setTabToolTip(documentIndex, mapDocument->fileName());
     connect(mapDocument, SIGNAL(fileNameChanged()), SLOT(updateDocumentTab()));
     connect(mapDocument, SIGNAL(modifiedChanged()), SLOT(updateDocumentTab()));
+
+    // keep us in sync with disc
+    mFileSystemWatcher->addPath(mapDocument->fileName());
+    mSignalMapper->setMapping(mapDocument, mapDocument);
+    connect(mapDocument, SIGNAL(fileSaved()),
+            mSignalMapper, SLOT(map()));
 
     switchToDocument(documentIndex);
     centerViewOn(0, 0);
@@ -245,4 +271,41 @@ void DocumentManager::centerViewOn(int x, int y)
         return;
 
     view->centerOn(currentDocument()->renderer()->tileToPixelCoords(x, y));
+}
+
+void DocumentManager::addReloadWarning(MapDocument *whichDocument)
+{
+    const int index = mDocuments.indexOf(whichDocument);
+    QVBoxLayout *layout = static_cast<QVBoxLayout*>
+            (mTabWidget->widget(index)->layout());
+
+    if (dynamic_cast<QPushButton*>(layout->itemAt(0)->widget()))
+        return;
+
+    QPushButton *warningMessage = new QPushButton();
+    warningMessage->setText(tr("File changed on disc! Click here to reload."));
+    layout->insertWidget(0, warningMessage);
+}
+
+void DocumentManager::removeReloadWarning(QObject *whichObject)
+{
+    MapDocument *whichDocument =static_cast<MapDocument*>(whichObject);
+    const int index = mDocuments.indexOf(whichDocument);
+    QVBoxLayout *layout = static_cast<QVBoxLayout*>
+            (mTabWidget->widget(index)->layout());
+
+    QPushButton *warningMessage = dynamic_cast<QPushButton*>
+            (layout->itemAt(0)->widget());
+
+    if (warningMessage)
+        layout->removeWidget(warningMessage);
+}
+
+void DocumentManager::fileChanged(const QString &fileName)
+{
+    foreach (MapDocument *mapDocument, mDocuments) {
+        if (fileName == mapDocument->fileName()) {
+            addReloadWarning(mapDocument);
+        }
+    }
 }
