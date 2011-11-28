@@ -39,6 +39,7 @@
 #include "erasetiles.h"
 #include "bucketfilltool.h"
 #include "filltiles.h"
+#include "finddialog.h"
 #include "languagemanager.h"
 #include "layer.h"
 #include "layerdock.h"
@@ -175,6 +176,10 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
     mUi->actionDelete->setShortcuts(QKeySequence::Delete);
     undoAction->setShortcuts(QKeySequence::Undo);
     redoAction->setShortcuts(QKeySequence::Redo);
+    mUi->actionFindDialog->setShortcut(QKeySequence::Find);
+    mUi->actionFindNext->setShortcut(QKeySequence::FindNext);
+    mUi->actionFindPrevious->setShortcut(QKeySequence::FindPrevious);
+    mUi->actionReplaceDialog->setShortcut(QKeySequence::Replace);
 
     mUi->actionShowGrid->setChecked(preferences->showGrid());
     mUi->actionSnapToGrid->setChecked(preferences->snapToGrid());
@@ -253,6 +258,8 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
     connect(mUi->actionDelete, SIGNAL(triggered()), SLOT(delete_()));
     connect(mUi->actionPreferences, SIGNAL(triggered()),
             SLOT(openPreferences()));
+
+    connect(mUi->actionFindDialog, SIGNAL(triggered()), SLOT(openFindDialog()));
 
     connect(mUi->actionShowGrid, SIGNAL(toggled(bool)),
             preferences, SLOT(setShowGrid(bool)));
@@ -988,6 +995,18 @@ void MainWindow::openPreferences()
     PreferencesDialog preferencesDialog(this);
     preferencesDialog.exec();
 }
+
+void MainWindow::openFindDialog()
+{
+    FindDialog *findDialog = new FindDialog(mMapDocument, this);
+    findDialog->show();
+}
+
+void MainWindow::openReplaceDialog()
+{
+
+}
+
 
 void MainWindow::zoomIn()
 {

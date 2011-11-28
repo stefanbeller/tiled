@@ -105,8 +105,24 @@
     <addaction name="actionZoomOut"/>
     <addaction name="actionZoomNormal"/>
    </widget>
+   <widget class="QMenu" name="menuSearch">
+    <property name="title">
+     <string>Find/&amp;Replace</string>
+    </property>
+    <addaction name="actionFindDialog"/>
+    <addaction name="actionFindNext"/>
+    <addaction name="actionFindPrevious"/>
+    <addaction name="separator"/>
+    <addaction name="actionReplaceDialog"/>
+    <addaction name="actionReplaceAndFindNext"/>
+    <addaction name="actionReplaceAll"/>
+    <addaction name="separator"/>
+    <addaction name="actionManageAutoreplaces"/>
+    <addaction name="actionAutoreplace"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
+   <addaction name="menuSearch"/>
    <addaction name="menuView"/>
    <addaction name="menuMap"/>
    <addaction name="menuHelp"/>
@@ -402,6 +418,54 @@
    </property>
    <property name="shortcut">
     <string>H</string>
+   </property>
+  </action>
+  <action name="actionFind_Replace">
+   <property name="text">
+    <string>&amp;Find/Replace</string>
+   </property>
+  </action>
+  <action name="actionFindDialog">
+   <property name="text">
+    <string>Find Dialog...</string>
+   </property>
+  </action>
+  <action name="actionFindNext">
+   <property name="text">
+    <string>Find Next</string>
+   </property>
+  </action>
+  <action name="actionFindPrevious">
+   <property name="text">
+    <string>Find Previous</string>
+   </property>
+  </action>
+  <action name="actionReplaceDialog">
+   <property name="text">
+    <string>Replace Dialog...</string>
+   </property>
+  </action>
+  <action name="actionReplaceAndFindNext">
+   <property name="text">
+    <string>Replace &amp;&amp; Find Next</string>
+   </property>
+  </action>
+  <action name="actionReplaceAll">
+   <property name="text">
+    <string>Replace All</string>
+   </property>
+  </action>
+  <action name="actionManageAutoreplaces">
+   <property name="text">
+    <string>Manage Autoreplaces...</string>
+   </property>
+  </action>
+  <action name="actionAutoreplace">
+   <property name="text">
+    <string>Autoreplace</string>
+   </property>
+   <property name="shortcut">
+    <string>A</string>
    </property>
   </action>
  </widget>

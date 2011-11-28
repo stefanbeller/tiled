@@ -54,6 +54,7 @@ class BucketFillTool;
 class TilesetDock;
 class MapView;
 class CommandButton;
+class FindDialog;
 
 /**
  * The main editor window.
@@ -116,6 +117,9 @@ public slots:
     void paste();
     void delete_(); // delete is a reserved word
     void openPreferences();
+
+    void openFindDialog();
+    void openReplaceDialog();
 
     void zoomIn();
     void zoomOut();
@@ -207,6 +211,7 @@ private:
     QSettings mSettings;
     QToolButton *mRandomButton;
     CommandButton *mCommandButton;
+    FindDialog *mFindDialog;
 
     StampBrush *mStampBrush;
     BucketFillTool *mBucketFillTool;

@@ -71,6 +71,8 @@ SOURCES += aboutdialog.cpp \
     erasetiles.cpp \
     filesystemwatcher.cpp \
     filltiles.cpp \
+    finddialog.cpp \
+    findmanager.cpp \
     imagelayeritem.cpp \
     imagelayerpropertiesdialog.cpp \
     languagemanager.cpp \
@@ -130,6 +132,7 @@ SOURCES += aboutdialog.cpp \
     utils.cpp \
     zoomable.cpp
 
+
 HEADERS += aboutdialog.h \
     abstractobjecttool.h \
     abstracttiletool.h \
@@ -163,6 +166,8 @@ HEADERS += aboutdialog.h \
     erasetiles.h \
     filesystemwatcher.h \
     filltiles.h \
+    finddialog.h \
+    findmanager.h \
     imagelayeritem.h \
     imagelayerpropertiesdialog.h \
     languagemanager.h \
@@ -232,6 +237,7 @@ macx {
 
 FORMS += aboutdialog.ui \
     commanddialog.ui \
+    finddialog.ui \
     mainwindow.ui \
     newmapdialog.ui \
     newtilesetdialog.ui \
