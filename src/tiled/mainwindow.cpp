@@ -110,6 +110,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
     , mStatusInfoLabel(new QLabel)
     , mClipboardManager(new ClipboardManager(this))
     , mDocumentManager(DocumentManager::instance())
+    , mUpdateTimer(new QTimer)
 {
     mUi->setupUi(this);
     setCentralWidget(mDocumentManager->widget());
@@ -402,6 +403,12 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
             this, SLOT(autoMappingWarning()));
     connect(AutomappingManager::instance(), SIGNAL(errorsOccurred()),
             this, SLOT(autoMappingError()));
+
+    mUpdateCheckManager = new QNetworkAccessManager(this);
+    connect(mUpdateCheckManager, SIGNAL(finished(QNetworkReply*)),
+            this, SLOT(updateCheckAnswer(QNetworkReply*)));
+    QUrl url(QLatin1String("http://mapeditor.org/onlineversioncheck.txt"));
+    mUpdateCheckManager->get(QNetworkRequest(url));
 }
 
 MainWindow::~MainWindow()
@@ -1323,7 +1330,9 @@ void MainWindow::setStampBrush(const TileLayer *tiles)
 
 void MainWindow::updateStatusInfoLabel(const QString &statusInfo)
 {
-    mStatusInfoLabel->setText(statusInfo);
+    mStatusInfoLabel->setText(statusInfo +
+                              QLatin1Char(' ') +
+                              mUpdateInformation);
 }
 
 void MainWindow::writeSettings()
@@ -1485,4 +1494,28 @@ void MainWindow::closeMapDocument(int index)
     mDocumentManager->switchToDocument(index);
     if (confirmSave())
         mDocumentManager->closeCurrentDocument();
+}
+
+void MainWindow::updateCheckAnswer(QNetworkReply *reply)
+{
+    // 404 should be caught here! configure the webserver
+    // to really deliver 404 instead of a faulty page
+    if (reply->error() != QNetworkReply::NoError)
+        return;
+
+    QString firstLine = QLatin1String(reply->readLine());
+
+    if (QApplication::applicationVersion() != firstLine) {
+        mUpdateInformation = tr("You are using version %1 of %2. "
+                                "There is a newer version '%3' available.")
+                .arg(QApplication::applicationVersion(),
+                     QApplication::applicationName(),
+                     firstLine);
+        mUpdateTimer->singleShot(30000, this, SLOT(updateCheckRemoveWarning()));
+    }
+}
+
+void MainWindow::updateCheckRemoveWarning()
+{
+    mUpdateInformation = QString();
 }

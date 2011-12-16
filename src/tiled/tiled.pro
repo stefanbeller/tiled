@@ -12,6 +12,8 @@ win32 {
 }
 contains(QT_CONFIG, opengl): QT += opengl
 
+QT += network
+
 DEFINES += QT_NO_CAST_FROM_ASCII \
     QT_NO_CAST_TO_ASCII
 

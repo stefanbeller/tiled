@@ -29,6 +29,9 @@
 #include <QMainWindow>
 #include <QSessionManager>
 #include <QSettings>
+#include <QNetworkAccessManager>
+#include <QNetworkRequest>
+#include <QNetworkReply>
 
 class QLabel;
 class QToolButton;
@@ -151,6 +154,9 @@ public slots:
 
     void autoMappingError();
     void autoMappingWarning();
+
+    void updateCheckAnswer(QNetworkReply *reply);
+    void updateCheckRemoveWarning();
 private:
     /**
       * Asks the user whether the current map should be saved when necessary.
@@ -221,6 +227,10 @@ private:
     void setupQuickStamps();
 
     DocumentManager *mDocumentManager;
+
+    QNetworkAccessManager *mUpdateCheckManager;
+    QString mUpdateInformation;
+    QTimer *mUpdateTimer;
 };
 
 } // namespace Internal
