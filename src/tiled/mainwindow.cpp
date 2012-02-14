@@ -55,6 +55,7 @@
 #include "pluginmanager.h"
 #include "propertiesdialog.h"
 #include "resizedialog.h"
+#include "objectinspectordock.h"
 #include "objectselectiontool.h"
 #include "objectgroup.h"
 #include "offsetmapdialog.h"
@@ -115,6 +116,8 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
     , mCurrentLayerLabel(new QLabel)
     , mZoomable(0)
     , mZoomComboBox(new QComboBox)
+    , mObjectInspectorDock(new ObjectInspectorDock(this))
+    , mZoomLabel(new QLabel)
     , mStatusInfoLabel(new QLabel)
     , mClipboardManager(new ClipboardManager(this))
     , mDocumentManager(DocumentManager::instance())
@@ -169,9 +172,11 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
     addDockWidget(Qt::RightDockWidgetArea, mObjectsDock);
     addDockWidget(Qt::RightDockWidgetArea, mTerrainDock);
     addDockWidget(Qt::RightDockWidgetArea, mTilesetDock);
+    addDockWidget(Qt::RightDockWidgetArea, mObjectInspectorDock);
     tabifyDockWidget(undoDock, mObjectsDock);
     tabifyDockWidget(mObjectsDock, mLayerDock);
     tabifyDockWidget(mTerrainDock, mTilesetDock);
+    tabifyDockWidget(mTilesetDock,mObjectInspectorDock);
 
     statusBar()->addPermanentWidget(mZoomComboBox);
 
@@ -1473,6 +1478,7 @@ void MainWindow::mapDocumentChanged(MapDocument *mapDocument)
     mObjectsDock->setMapDocument(mMapDocument);
     mTilesetDock->setMapDocument(mMapDocument);
     mTerrainDock->setMapDocument(mMapDocument);
+    mObjectInspectorDock->setMapDocument(mMapDocument);
     AutomappingManager::instance()->setMapDocument(mMapDocument);
     QuickStampManager::instance()->setMapDocument(mMapDocument);
 

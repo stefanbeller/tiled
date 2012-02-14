@@ -47,6 +47,7 @@ class MapReaderInterface;
 namespace Internal {
 
 class ClipboardManager;
+class DiffDock;
 class DocumentManager;
 class LayerDock;
 class MapDocumentActionHandler;
@@ -60,6 +61,7 @@ class MapView;
 class CommandButton;
 class ObjectsDock;
 class Zoomable;
+class ObjectInspectorDock;
 
 /**
  * The main editor window.
@@ -158,6 +160,8 @@ public slots:
 
     void autoMappingError();
     void autoMappingWarning();
+
+    void addMapDocument(MapDocument *mapDocument);
 private:
     /**
       * Asks the user whether the current map should be saved when necessary.
@@ -187,7 +191,7 @@ private:
     void writeSettings();
     void readSettings();
 
-    void addMapDocument(MapDocument *mapDocument);
+
     QStringList recentFiles() const;
     QString fileDialogStartLocation() const;
 
@@ -213,10 +217,13 @@ private:
     QLabel *mCurrentLayerLabel;
     Zoomable *mZoomable;
     QComboBox *mZoomComboBox;
+    DiffDock *mDiffDock;
+    QLabel *mZoomLabel;
     QLabel *mStatusInfoLabel;
     QSettings mSettings;
     QToolButton *mRandomButton;
     CommandButton *mCommandButton;
+    ObjectInspectorDock *mObjectInspectorDock;
 
     StampBrush *mStampBrush;
     BucketFillTool *mBucketFillTool;

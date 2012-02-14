@@ -95,6 +95,7 @@ SOURCES += aboutdialog.cpp \
     newtilesetdialog.cpp \
     objectgroupitem.cpp \
     objectgrouppropertiesdialog.cpp \
+    objectinspectordock.cpp \
     objectpropertiesdialog.cpp \
     objectsdock.cpp \
     objectselectiontool.cpp \
@@ -198,6 +199,7 @@ HEADERS += aboutdialog.h \
     newtilesetdialog.h \
     objectgroupitem.h \
     objectgrouppropertiesdialog.h \
+    objectinspectordock.h \
     objectpropertiesdialog.h \
     objectsdock.h \
     objectselectiontool.h \
@@ -254,6 +256,7 @@ FORMS += aboutdialog.ui \
     newmapdialog.ui \
     newtilesetdialog.ui \
     objectpropertiesdialog.ui \
+    objectinspectordock.ui \
     offsetmapdialog.ui \
     preferencesdialog.ui \
     propertiesdialog.ui \
