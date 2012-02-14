@@ -80,6 +80,7 @@
 #include "commandbutton.h"
 #include "objectsdock.h"
 #include "minimapdock.h"
+#include "objectinspectordock.h"
 
 #ifdef Q_WS_MAC
 #include "macsupport.h"
@@ -120,6 +121,8 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
     , mCurrentLayerLabel(new QLabel)
     , mZoomable(0)
     , mZoomComboBox(new QComboBox)
+    , mObjectInspectorDock(new ObjectInspectorDock(this))
+    , mZoomLabel(new QLabel)
     , mStatusInfoLabel(new QLabel)
     , mClipboardManager(new ClipboardManager(this))
     , mDocumentManager(DocumentManager::instance())
@@ -172,10 +175,13 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
     addDockWidget(Qt::LeftDockWidgetArea, mMapsDock);
     addDockWidget(Qt::RightDockWidgetArea, mObjectsDock);
     addDockWidget(Qt::RightDockWidgetArea, mMiniMapDock);
+    addDockWidget(Qt::RightDockWidgetArea, mObjectInspectorDock);
     addDockWidget(Qt::RightDockWidgetArea, mTerrainDock);
     addDockWidget(Qt::RightDockWidgetArea, mTilesetDock);
 
     tabifyDockWidget(mMiniMapDock, mObjectsDock);
+    tabifyDockWidget(mTilesetDock, mObjectInspectorDock);
+    tabifyDockWidget(undoDock, mObjectsDock);
     tabifyDockWidget(mObjectsDock, mLayerDock);
     tabifyDockWidget(mTerrainDock, mTilesetDock);
     tabifyDockWidget(undoDock, mMapsDock);
@@ -1544,6 +1550,7 @@ void MainWindow::mapDocumentChanged(MapDocument *mapDocument)
     mTilesetDock->setMapDocument(mMapDocument);
     mTerrainDock->setMapDocument(mMapDocument);
     mMiniMapDock->setMapDocument(mMapDocument);
+    mObjectInspectorDock->setMapDocument(mMapDocument);
     AutomappingManager::instance()->setMapDocument(mMapDocument);
     QuickStampManager::instance()->setMapDocument(mMapDocument);
 

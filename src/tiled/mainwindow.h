@@ -46,22 +46,24 @@ class MapReaderInterface;
 
 namespace Internal {
 
+class BucketFillTool;
 class ClipboardManager;
+class CommandButton;
 class DocumentManager;
 class LayerDock;
 class MapDocumentActionHandler;
-class MapsDock;
 class MapScene;
-class StampBrush;
-class BucketFillTool;
-class TerrainBrush;
-class TilesetDock;
-class TerrainDock;
+class MapsDock;
 class MapView;
-class CommandButton;
-class ObjectsDock;
-class Zoomable;
 class MiniMapDock;
+class ObjectInspectorDock;
+class ObjectsDock;
+class StampBrush;
+class TerrainBrush;
+class TerrainDock;
+class TilesetDock;
+class Zoomable;
+
 
 /**
  * The main editor window.
@@ -223,6 +225,7 @@ private:
     QSettings mSettings;
     QToolButton *mRandomButton;
     CommandButton *mCommandButton;
+    ObjectInspectorDock *mObjectInspectorDock;
 
     StampBrush *mStampBrush;
     BucketFillTool *mBucketFillTool;
