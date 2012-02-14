@@ -51,9 +51,9 @@ SOURCES += aboutdialog.cpp \
     automappingutils.cpp  \
     brushitem.cpp \
     bucketfilltool.cpp \
+    changeimagelayerproperties.cpp \
     changemapobject.cpp \
     changemapproperties.cpp \
-    changeimagelayerproperties.cpp \
     changeobjectgroupproperties.cpp \
     changepolygon.cpp \
     changeproperties.cpp \
@@ -100,6 +100,7 @@ SOURCES += aboutdialog.cpp \
     newtilesetdialog.cpp \
     objectgroupitem.cpp \
     objectgrouppropertiesdialog.cpp \
+    objectinspectordock.cpp \
     objectpropertiesdialog.cpp \
     objectsdock.cpp \
     objectselectiontool.cpp \
@@ -158,9 +159,9 @@ HEADERS += aboutdialog.h \
     automappingutils.h \
     brushitem.h \
     bucketfilltool.h \
+    changeimagelayerproperties.h\
     changemapobject.h \
     changemapproperties.h \
-    changeimagelayerproperties.h\
     changeobjectgroupproperties.h \
     changepolygon.h \
     changeproperties.h \
@@ -197,8 +198,8 @@ HEADERS += aboutdialog.h \
     mapscene.h \
     mapsdock.h \
     mapview.h \
-    minimap.h \
     minimapdock.h \
+    minimap.h \
     movelayer.h \
     movemapobject.h \
     movemapobjecttogroup.h \
@@ -207,6 +208,7 @@ HEADERS += aboutdialog.h \
     newtilesetdialog.h \
     objectgroupitem.h \
     objectgrouppropertiesdialog.h \
+    objectinspectordock.h \
     objectpropertiesdialog.h \
     objectsdock.h \
     objectselectiontool.h \
@@ -259,9 +261,12 @@ macx {
 
 FORMS += aboutdialog.ui \
     commanddialog.ui \
+    editterraindialog.ui \
     mainwindow.ui \
     newmapdialog.ui \
     newtilesetdialog.ui \
+    newimagelayerdialog.ui \
+    objectinspectordock.ui \
     objectpropertiesdialog.ui \
     offsetmapdialog.ui \
     preferencesdialog.ui \
@@ -281,7 +286,6 @@ INSTALLS += desktopfile
 manpage.path = $${PREFIX}/share/man/man1/
 manpage.files += ../../docs/tiled.1
 INSTALLS += manpage
-
 RESOURCES += tiled.qrc
 macx {
     TARGET = Tiled
