@@ -999,6 +999,7 @@ void MainWindow::openPreferences()
 void MainWindow::openFindDialog()
 {
     FindDialog *findDialog = new FindDialog(mMapDocument, this);
+    findDialog->setModal(false);
     findDialog->show();
 }
 

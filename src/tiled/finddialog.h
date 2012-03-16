@@ -55,8 +55,8 @@ private:
 
 
 
-    MapScene *mMapScene;
-    MapView *mMapView;
+    //MapScene *mMapScene;
+    //MapView *mMapView;
     QTreeView *mLayerSearch;
 
     Map *mMap; // my map to be displayed

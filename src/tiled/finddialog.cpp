@@ -19,15 +19,14 @@ using namespace Tiled::Internal;
 
 FindDialog::FindDialog(MapDocument *document, QWidget *parent)
     : QDialog(parent)
-    , mMapView(new MapView())
+    //, mMapView(new MapView())
     , mMapDocument(document)
     , mStampBrush(new StampBrush())
 {
     setupUi(this);
-    mStampBrush->activate(mScene);
-    if (AbstractTileTool *tool = dynamic_cast<AbstractTileTool*>(ToolManager::instance()->selectedTool()))
-        //mStampBrush->setStamp(tool->);
-            ;
+
+    if (StampBrush *tool = dynamic_cast<StampBrush*>(ToolManager::instance()->selectedTool()))
+        mStampBrush->setStamp(tool->stamp());
 }
 
 void FindDialog::setupUi(QDialog *FindDialog)
@@ -49,11 +48,11 @@ void FindDialog::setupUi(QDialog *FindDialog)
     int tileWidth = map->tileWidth();
 
     mMap = new Map(orientation, 5, 5, tileWidth, tileHeight);
-    mScene->setMapDocument(new MapDocument(mMap));
+    MapDocument *md = new MapDocument(mMap);
+    mScene->setMapDocument(md);
     mView->setScene(mScene);
-
-    //MapView *ofWorkingMap = DocumentManager::instance()->currentMapView();
-    //mMapView->zoomable()->setScale(ofWorkingMap->zoomable()->scale());
+    //mStampBrush->setMapDocument(md);
+    mStampBrush->activate(mScene);
 
     mVerticalLayout->addWidget(mView);
 
