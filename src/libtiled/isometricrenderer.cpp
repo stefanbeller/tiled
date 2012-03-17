@@ -304,9 +304,11 @@ void IsometricRenderer::drawMapObject(QPainter *painter,
 
     QPen pen(Qt::black);
 
-    if (object->tile()) {
-        const QPixmap &img = object->tile()->image();
-        QPointF paintOrigin(-img.width() / 2, -img.height());
+    if (Tile *tile = object->tile()) {
+        const QPixmap &img = tile->image();
+        const QPoint offset = tile->tileset()->tileOffset();
+        QPointF paintOrigin(offset.x() - img.width() / 2,
+                            offset.y() - img.height());
         paintOrigin += tileToPixelCoords(object->position()).toPoint();
         painter->drawPixmap(paintOrigin, img);
 
