@@ -209,7 +209,7 @@ public:
     /**
      * Returns the tile associated with this object.
      */
-    Cell cell() const { return mCell; }
+    const Cell &cell() const { return mCell; }
 
     /**
      * Returns the object group this object belongs to.

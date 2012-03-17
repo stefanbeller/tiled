@@ -49,6 +49,17 @@ class Tileset;
 class Cell
 {
 public:
+    enum FlipDirection {
+        FlipHorizontally,
+        FlipVertically,
+        FlipDiagonally
+    };
+
+    enum RotateDirection {
+        RotateLeft,
+        RotateRight
+    };
+
     Cell() :
         tile(0),
         flippedHorizontally(false),
@@ -81,6 +92,41 @@ public:
                 || flippedAntiDiagonally != other.flippedAntiDiagonally;
     }
 
+    void flipHorizontally()
+    {
+        flippedHorizontally = !flippedHorizontally;
+    }
+
+    void flipVertically()
+    {
+        flippedVertically = !flippedVertically;
+    }
+
+    void flipAntiDiagonally()
+    {
+        flippedAntiDiagonally = !flippedAntiDiagonally;
+    }
+
+    void rotate(RotateDirection direction)
+    {
+        static const char rotateRightMask[8] = { 5, 4, 1, 0, 7, 6, 3, 2 };
+        static const char rotateLeftMask[8]  = { 3, 2, 7, 6, 1, 0, 5, 4 };
+
+        const char (&rotateMask)[8] =
+                (direction == RotateRight) ? rotateRightMask : rotateLeftMask;
+
+        unsigned char mask =
+                (flippedHorizontally << 2) |
+                (flippedVertically << 1) |
+                (flippedAntiDiagonally << 0);
+
+        mask = rotateMask[mask];
+
+        flippedHorizontally = (mask & 4) != 0;
+        flippedVertically = (mask & 2) != 0;
+        flippedAntiDiagonally = (mask & 1) != 0;
+    }
+
     Tile *tile;
     bool flippedHorizontally;
     bool flippedVertically;
@@ -97,16 +143,7 @@ public:
 class TILEDSHARED_EXPORT TileLayer : public Layer
 {
 public:
-    enum FlipDirection {
-        FlipHorizontally,
-        FlipVertically,
-        FlipDiagonally
-    };
 
-    enum RotateDirection {
-        RotateLeft,
-        RotateRight
-    };
 
     /**
      * Constructor.
@@ -198,14 +235,14 @@ public:
      * horizontal or vertical. This doesn't change the dimensions of the
      * tile layer.
      */
-    void flip(FlipDirection direction);
+    void flip(Cell::FlipDirection direction);
 
     /**
      * Rotate this tile layer by 90 degrees left or right. The tile positions
      * are rotated within the layer, and the tiles themselves are rotated. The
      * dimensions of the tile layer are swapped.
      */
-    void rotate(RotateDirection direction);
+    void rotate(Cell::RotateDirection direction);
 
     /**
      * Computes and returns the set of tilesets used by this tile layer.

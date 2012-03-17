@@ -46,18 +46,19 @@ class MapReaderInterface;
 
 namespace Internal {
 
+class BucketFillTool;
 class ClipboardManager;
+class CommandButton;
 class DocumentManager;
 class LayerDock;
 class MapDocumentActionHandler;
 class MapScene;
+class MapView;
+class ObjectSelectionTool;
 class StampBrush;
-class BucketFillTool;
 class TerrainBrush;
 class TilesetDock;
 class TerrainDock;
-class MapView;
-class CommandButton;
 class ObjectsDock;
 class Zoomable;
 
@@ -221,6 +222,8 @@ private:
     StampBrush *mStampBrush;
     BucketFillTool *mBucketFillTool;
     TerrainBrush *mTerrainBrush;
+
+    ObjectSelectionTool *mObjectSelectionTool;
 
     ClipboardManager *mClipboardManager;
 

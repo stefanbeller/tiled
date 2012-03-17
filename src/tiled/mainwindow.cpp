@@ -340,6 +340,8 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
     CreateObjectTool *polylineObjectsTool = new CreateObjectTool(
             CreateObjectTool::CreatePolyline, this);
 
+    mObjectSelectionTool = new ObjectSelectionTool(this);
+
     connect(mTilesetDock, SIGNAL(currentTilesChanged(const TileLayer*)),
             this, SLOT(setStampBrush(const TileLayer*)));
     connect(mStampBrush, SIGNAL(currentTilesChanged(const TileLayer*)),
@@ -362,7 +364,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
     toolManager->registerTool(new Eraser(this));
     toolManager->registerTool(new TileSelectionTool(this));
     toolManager->addSeparator();
-    toolManager->registerTool(new ObjectSelectionTool(this));
+    toolManager->registerTool(mObjectSelectionTool);
     toolManager->registerTool(new EditPolygonTool(this));
     toolManager->registerTool(areaObjectsTool);
     toolManager->registerTool(tileObjectsTool);
@@ -1292,8 +1294,17 @@ void MainWindow::flipStampHorizontally()
 {
     if (TileLayer *stamp = mStampBrush->stamp()) {
         stamp = static_cast<TileLayer*>(stamp->clone());
-        stamp->flip(TileLayer::FlipHorizontally);
+        stamp->flip(Cell::FlipHorizontally);
         setStampBrush(stamp);
+    }
+
+    if (!mMapDocument)
+        return;
+
+    foreach (MapObject *mapObject, mMapDocument->selectedObjects()) {
+        Cell cell = mapObject->cell();
+        cell.flipHorizontally();
+        mapObject->setCell(cell);
     }
 }
 
@@ -1301,8 +1312,17 @@ void MainWindow::flipStampVertically()
 {
     if (TileLayer *stamp = mStampBrush->stamp()) {
         stamp = static_cast<TileLayer*>(stamp->clone());
-        stamp->flip(TileLayer::FlipVertically);
+        stamp->flip(Cell::FlipVertically);
         setStampBrush(stamp);
+    }
+
+    if (!mMapDocument)
+        return;
+
+    foreach (MapObject *mapObject, mMapDocument->selectedObjects()) {
+        Cell cell = mapObject->cell();
+        cell.flipVertically();
+        mapObject->setCell(cell);
     }
 }
 
@@ -1310,8 +1330,17 @@ void MainWindow::rotateStampLeft()
 {
     if (TileLayer *stamp = mStampBrush->stamp()) {
         stamp = static_cast<TileLayer*>(stamp->clone());
-        stamp->rotate(TileLayer::RotateLeft);
+        stamp->rotate(Cell::RotateLeft);
         setStampBrush(stamp);
+    }
+
+    if (!mMapDocument)
+        return;
+
+    foreach (MapObject *mapObject, mMapDocument->selectedObjects()) {
+        Cell cell = mapObject->cell();
+        cell.rotate(Cell::RotateLeft);
+        mapObject->setCell(cell);
     }
 }
 
@@ -1319,8 +1348,17 @@ void MainWindow::rotateStampRight()
 {
     if (TileLayer *stamp = mStampBrush->stamp()) {
         stamp = static_cast<TileLayer*>(stamp->clone());
-        stamp->rotate(TileLayer::RotateRight);
+        stamp->rotate(Cell::RotateRight);
         setStampBrush(stamp);
+    }
+
+    if (!mMapDocument)
+        return;
+
+    foreach (MapObject *mapObject, mMapDocument->selectedObjects()) {
+        Cell cell = Cell(mapObject->cell());
+        cell.rotate(Cell::RotateRight);
+        mapObject->setCell(cell);
     }
 }
 
