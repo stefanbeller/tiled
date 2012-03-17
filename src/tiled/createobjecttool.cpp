@@ -48,7 +48,7 @@ CreateObjectTool::CreateObjectTool(CreationMode mode, QObject *parent)
     , mOverlayObjectGroup(0)
     , mOverlayPolygonObject(0)
     , mOverlayPolygonItem(0)
-    , mTile(0)
+    , mCell(0)
     , mMode(mode)
 {
     switch (mMode) {
@@ -130,7 +130,7 @@ void CreateObjectTool::mouseMoved(const QPointF &pos,
         break;
     }
     case CreateTile: {
-        const QSize imgSize = mNewMapObjectItem->mapObject()->tile()->size();
+        const QSize imgSize = mNewMapObjectItem->mapObject()->cell().tile->size();
         const QPointF diff(-imgSize.width() / 2, imgSize.height() / 2);
         QPointF tileCoords = renderer->pixelToTileCoords(pos + diff);
 
@@ -211,10 +211,11 @@ void CreateObjectTool::mousePressed(QGraphicsSceneMouseEvent *event)
     QPointF tileCoords;
 
     if (mMode == CreateTile) {
-        if (!mTile)
+        if (mCell.isEmpty())
             return;
 
-        const QPointF diff(-mTile->width() / 2, mTile->height() / 2);
+        const QPointF diff(-mCell.tile->width() / 2,
+                           mCell.tile->height() / 2);
         tileCoords = renderer->pixelToTileCoords(event->scenePos() + diff);
     } else {
         tileCoords = renderer->pixelToTileCoords(event->scenePos());
@@ -265,14 +266,14 @@ void CreateObjectTool::startNewMapObject(const QPointF &pos,
 {
     Q_ASSERT(!mNewMapObjectItem);
 
-    if (mMode == CreateTile && !mTile)
+    if (mMode == CreateTile && mCell.isEmpty())
         return;
 
     MapObject *newMapObject = new MapObject;
     newMapObject->setPosition(pos);
 
     if (mMode == CreateTile)
-        newMapObject->setTile(mTile);
+        newMapObject->setCell(mCell);
 
     if (mMode == CreatePolygon || mMode == CreatePolyline) {
         MapObject::Shape shape = mMode == CreatePolygon ? MapObject::Polygon

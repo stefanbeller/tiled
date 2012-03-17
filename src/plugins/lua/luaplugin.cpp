@@ -272,8 +272,9 @@ void LuaPlugin::writeMapObject(LuaTableWriter &writer,
     writer.writeKeyAndValue("width", size.x());
     writer.writeKeyAndValue("height", size.y());
 
-    if (Tile *tile = mapObject->tile())
-        writer.writeKeyAndValue("gid", mGidMapper.cellToGid(Cell(tile)));
+    Cell cell = mapObject->cell();
+    if (!cell.isEmpty())
+        writer.writeKeyAndValue("gid", mGidMapper.cellToGid(cell));
 
     writer.writeKeyAndValue("visible", mapObject->isVisible());
 

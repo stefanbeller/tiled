@@ -64,9 +64,9 @@ QRectF OrthogonalRenderer::boundingRect(const MapObject *object) const
 
     QRectF boundingRect;
 
-    if (object->tile()) {
+    if (!object->cell().isEmpty()) {
         const QPointF bottomLeft = rect.topLeft();
-        const QPixmap &img = object->tile()->image();
+        const QPixmap &img = object->cell().tile->image();
         boundingRect = QRectF(bottomLeft.x(),
                               bottomLeft.y() - img.height(),
                               img.width(),
@@ -101,7 +101,7 @@ QPainterPath OrthogonalRenderer::shape(const MapObject *object) const
 {
     QPainterPath path;
 
-    if (object->tile()) {
+    if (!object->cell().isEmpty()) {
         path.addRect(boundingRect(object));
     } else {
         switch (object->shape()) {
@@ -297,7 +297,7 @@ void OrthogonalRenderer::drawMapObject(QPainter *painter,
     painter->translate(rect.topLeft());
     rect.moveTopLeft(QPointF(0, 0));
 
-    if (Tile *tile = object->tile()) {
+    if (Tile *tile = object->cell().tile) {
         const QPixmap &img = tile->image();
         const QPoint offset = tile->tileset()->tileOffset();
         const QPoint paintOrigin(offset.x(), offset.y() - img.height());

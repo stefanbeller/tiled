@@ -33,6 +33,8 @@
 
 #include "object.h"
 
+#include "tilelayer.h"
+
 #include <QPolygonF>
 #include <QSizeF>
 #include <QString>
@@ -41,7 +43,6 @@
 namespace Tiled {
 
 class ObjectGroup;
-class Tile;
 
 /**
  * An object on a map. Objects are positioned and scaled using floating point
@@ -203,12 +204,12 @@ public:
      *
      * \warning The object shape is ignored for tile objects!
      */
-    void setTile(Tile *tile) { mTile = tile; }
+    void setCell(Cell cell) { mCell = cell; }
 
     /**
      * Returns the tile associated with this object.
      */
-    Tile *tile() const { return mTile; }
+    Cell cell() const { return mCell; }
 
     /**
      * Returns the object group this object belongs to.
@@ -238,7 +239,7 @@ private:
     QSizeF mSize;
     QPolygonF mPolygon;
     Shape mShape;
-    Tile *mTile;
+    Cell mCell;
     ObjectGroup *mObjectGroup;
     bool mVisible;
 };

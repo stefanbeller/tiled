@@ -99,9 +99,11 @@ QSet<Tileset*> ObjectGroup::usedTilesets() const
 {
     QSet<Tileset*> tilesets;
 
-    foreach (const MapObject *object, mObjects)
-        if (const Tile *tile = object->tile())
-            tilesets.insert(tile->tileset());
+    foreach (const MapObject *object, mObjects) {
+        const Cell cell = object->cell();
+        if (!cell.isEmpty())
+            tilesets.insert(cell.tile->tileset());
+    }
 
     return tilesets;
 }
@@ -109,8 +111,8 @@ QSet<Tileset*> ObjectGroup::usedTilesets() const
 bool ObjectGroup::referencesTileset(const Tileset *tileset) const
 {
     foreach (const MapObject *object, mObjects) {
-        const Tile *tile = object->tile();
-        if (tile && tile->tileset() == tileset)
+        const Cell cell = object->cell();
+        if (!cell.isEmpty() && cell.tile->tileset() == tileset)
             return true;
     }
 
@@ -121,9 +123,11 @@ void ObjectGroup::replaceReferencesToTileset(Tileset *oldTileset,
                                              Tileset *newTileset)
 {
     foreach (MapObject *object, mObjects) {
-        const Tile *tile = object->tile();
-        if (tile && tile->tileset() == oldTileset)
-            object->setTile(newTileset->tileAt(tile->id()));
+        Cell cell = object->cell();
+        if (!cell.isEmpty() && cell.tile->tileset() == oldTileset) {
+            cell.tile = newTileset->tileAt(cell.tile->id());
+            object->setCell(cell);
+        }
     }
 }
 

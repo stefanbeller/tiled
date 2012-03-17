@@ -489,8 +489,8 @@ void MapWriterPrivate::writeObject(QXmlStreamWriter &w,
     if (!type.isEmpty())
         w.writeAttribute(QLatin1String("type"), type);
 
-    if (mapObject->tile()) {
-        const uint gid = mGidMapper.cellToGid(Cell(mapObject->tile()));
+    if (!mapObject->cell().isEmpty()) {
+        const uint gid = mGidMapper.cellToGid(mapObject->cell());
         w.writeAttribute(QLatin1String("gid"), QString::number(gid));
     }
 

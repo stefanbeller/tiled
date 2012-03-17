@@ -68,9 +68,9 @@ QRectF IsometricRenderer::boundingRect(const MapObject *object) const
 {
     const int nameHeight = object->name().isEmpty() ? 0 : 15;
 
-    if (object->tile()) {
+    if (!object->cell().isEmpty()) {
         const QPointF bottomCenter = tileToPixelCoords(object->position());
-        const QPixmap &img = object->tile()->image();
+        const QPixmap &img = object->cell().tile->image();
         return QRectF(bottomCenter.x() - img.width() / 2,
                       bottomCenter.y() - img.height(),
                       img.width(),
@@ -92,7 +92,7 @@ QRectF IsometricRenderer::boundingRect(const MapObject *object) const
 QPainterPath IsometricRenderer::shape(const MapObject *object) const
 {
     QPainterPath path;
-    if (object->tile()) {
+    if (!object->cell().isEmpty()) {
         path.addRect(boundingRect(object));
     } else {
         switch (object->shape()) {
@@ -304,7 +304,7 @@ void IsometricRenderer::drawMapObject(QPainter *painter,
 
     QPen pen(Qt::black);
 
-    if (Tile *tile = object->tile()) {
+    if (Tile *tile = object->cell().tile) {
         const QPixmap &img = tile->image();
         const QPoint offset = tile->tileset()->tileOffset();
         QPointF paintOrigin(offset.x() - img.width() / 2,

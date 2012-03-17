@@ -722,7 +722,7 @@ MapObject *MapReaderPrivate::readObject()
                                                               size.y()));
     if (gid) {
         const Cell cell = cellForGid(gid);
-        object->setTile(cell.tile);
+        object->setCell(cell);
     }
 
     bool ok;

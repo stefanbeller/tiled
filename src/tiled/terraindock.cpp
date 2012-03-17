@@ -354,7 +354,7 @@ void TerrainDock::removeTileset(int index)
                 }
             } else if (ObjectGroup *objectGroup = layer->asObjectGroup()) {
                 foreach (MapObject *object, objectGroup->objects()) {
-                    const Tile *tile = object->tile();
+                    const Tile *tile = object->cell().tile;
                     if (tile && tile->tileset() == tileset) {
                         undoStack->push(new RemoveMapObject(mMapDocument,
                                                             object));

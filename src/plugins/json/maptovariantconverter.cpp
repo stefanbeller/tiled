@@ -194,8 +194,8 @@ QVariant MapToVariantConverter::toVariant(const ObjectGroup *objectGroup)
         objectVariant["properties"] = toVariant(object->properties());
         objectVariant["name"] = name;
         objectVariant["type"] = type;
-        if (object->tile())
-            objectVariant["gid"] = mGidMapper.cellToGid(Cell(object->tile()));
+        if (!object->cell().isEmpty())
+            objectVariant["gid"] = mGidMapper.cellToGid(Cell(object->cell()));
 
         const TileToPixelCoordinates toPixel(objectGroup->map());
 
