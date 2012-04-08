@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="20" height="20" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="tiles32" tilewidth="32" tileheight="32">
+  <image source="asset_dir/tiles32.png" width="256" height="256"/>
+ </tileset>
+ <tileset firstgid="65" name="building" tilewidth="32" tileheight="32">
+  <image source="asset_dir/building.png" width="256" height="256"/>
+ </tileset>
+ <layer name="regions_input" width="20" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2DgACMUY2NTYia6GZSYR00w0vxLbYAv/Mj1M7HhR60wJcWcgfQvMQAAStgAJQ==
+  </data>
+ </layer>
+ <layer name="regions_output" width="20" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2DgACMR7OEERpp/qQ0GIvwY0WhqmUeq2sGYXgAi7AAQ
+  </data>
+ </layer>
+ <layer name="input_set" width="20" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2BggQkajc4eboDa/vVFo9HZww3YotEwti0WtdQEwlQyh5tE9dT2LzXTCwB6cAUN
+  </data>
+ </layer>
+ <layer name="input2_set" width="20" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUDGWQjkajs0fBKEAG1EwvAEtNAms=
+  </data>
+ </layer>
+ <layer name="input3_set" width="20" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUDGUQi0ajs0fBKEAG1EwvAPn+Ai8=
+  </data>
+ </layer>
+ <layer name="input4_set" width="20" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUDGUQjkajs0fBKEAG1EwvAMk+Ags=
+  </data>
+ </layer>
+ <layer name="inputnot_set" width="20" height="20" opacity="0.48">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2DggAkBPjnAF41GZw8koIV/RxKwJcAnBwzm9EIL/1ITAADQqQOT
+  </data>
+ </layer>
+ <layer name="inputnot2_set" width="20" height="20" opacity="0.51">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2B4gXQ0Gp09CkYBMhhNL+QDAI7LAms=
+  </data>
+ </layer>
+ <layer name="inputnot3_set" width="20" height="20" opacity="0.48">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2B4gVg0Gp09CkYBMhhNL+QDAAVLAi8=
+  </data>
+ </layer>
+ <layer name="inputnot4_set" width="20" height="20" opacity="0.48">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2B4gXA0Gp09CkYBMhhNL+QDALK8Ags=
+  </data>
+ </layer>
+ <layer name="output_background3" width="20" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2DggDES2wyJbUJvh9AJJCKxo5HYSfR2yBAFNkhsOyS2LQ3tZIbSwjS0AxfIQmLnILGz6e0QHAAASZUDyg==
+  </data>
+ </layer>
+ <layer name="output_foreground" width="20" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUjIJRQC/APdAOoCIAAA8EAAw=
+  </data>
+ </layer>
+</map>

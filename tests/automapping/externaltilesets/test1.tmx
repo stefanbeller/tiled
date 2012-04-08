@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE map SYSTEM "http://mapeditor.org/dtd/1.0/map.dtd">
+<map version="1.0" orientation="orthogonal" width="30" height="30" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" source="rules_sewers.tsx"/>
+ <tileset firstgid="7" source="sewer_tileset.tsx"/>
+ <layer name="set" width="30" height="30">
+  <data encoding="base64" compression="zlib">
+   eJztk9EKxTAIQ+3///ReRzExsRb2sEC5Qr2e6OyKiPU6ldQ8V+s/6UGzcWZXzTtAPOHb8an2oXI7/aD8jljN/b7qbYqr7FAk9yoX1ezsjbPLJ/yulLd1w4O755HEe77CVPeKvVVWM2PucWefnfki76hu1fdNLvPjMhlH3TP3vbpclJt5Y1zHe8Wu8pX/VfXU2U6wA8TVW0M67TuSX4WL2Psditl3d8Rm+c6ZFuu528u0n1/f0wO6dgHA
+  </data>
+ </layer>
+</map>

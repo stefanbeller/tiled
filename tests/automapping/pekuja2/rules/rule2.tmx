@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="22" height="15" tilewidth="32" tileheight="32">
+ <properties>
+  <property name="AutomappingRadius" value="2"/>
+  <property name="DeleteTiles" value="true"/>
+ </properties>
+ <tileset firstgid="1" name="tiles32" tilewidth="32" tileheight="32">
+  <image source="../asset_dir/tiles32.png" width="256" height="256"/>
+ </tileset>
+ <tileset firstgid="65" name="building" tilewidth="32" tileheight="32">
+  <image source="../asset_dir/building.png" width="256" height="256"/>
+ </tileset>
+ <layer name="regions_input" width="22" height="15">
+  <data encoding="base64" compression="zlib">
+   eJxjYKAdYESi8bEZGQYHYMTBJsTH5gd0fyKLUYuPzz5cYU6sf2gBcIUZtdw7WMKX2PRAbUBu+BJyL7oYrcKXVD6+9EJtAAAXNwBz
+  </data>
+ </layer>
+ <layer name="regions_output" width="22" height="15">
+  <data encoding="base64" compression="zlib">
+   eJxjZGBgYGSAABgNY6PzSQHI+qlpLq0AunvR3YWPj88PlJhLDH+oAGx+p4cdgy186REOpAJi3TMUwpdWAACWSAAt
+  </data>
+ </layer>
+ <layer name="input_set" width="22" height="15">
+  <data encoding="base64" compression="zlib">
+   eJxjYKAd8IXS6Wji6Uh0Ohb5oQjC8fBj0cTD0djofHS1uNSj20esuaS4l5qA3HBgIMAfDV9MQE33kmsuKeFLKiDWvdQCAIetHvs=
+  </data>
+ </layer>
+ <layer name="inputnot_set" width="22" height="15" opacity="0.51">
+  <data encoding="base64" compression="zlib">
+   eJxjYKAPSEejByOIRWKHo8nh46PLEWsGLkCsulGACgZL+BKbHqgNYgkrwQoGQ/olJb+hi9EjvwAA94UIVQ==
+  </data>
+ </layer>
+ <layer name="output_foreground" width="22" height="15">
+  <data encoding="base64" compression="zlib">
+   eJxjYKAd8IXSGWjiaUjsdBraP1hAKBLbD03OH40fgMb3QuN7U8VFAwNi6WBHGBo/HI0fgcYPQuMHU9c5WEEqHeygFYhD48ej8RPQ+J5o/ECquoZ+AACkLAd9
+  </data>
+ </layer>
+ <layer name="output_background2" width="22" height="15">
+  <data encoding="base64" compression="zlib">
+   eJxzYcAOXIDYDYnvjkPdcAEuaGw3NHl8/nfEIxeCgz3SQMwwsWM4AnzpdxRAAAB7yQQN
+  </data>
+ </layer>
+ <layer name="output_background3" width="22" height="15">
+  <data encoding="base64" compression="zlib">
+   eJxjYGBgcGWAAA+GkQ1cCSuBg5EeVqNgFIwkAAAPEwEb
+  </data>
+ </layer>
+ <layer name="output_background4" width="22" height="15">
+  <data encoding="base64" compression="zlib">
+   eJxjYKAN8CFRfBSMgpEAUgbaARSAoex2SgEA6AUBYQ==
+  </data>
+ </layer>
+</map>

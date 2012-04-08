@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="30" height="30" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" source="rules_sewers.tsx"/>
+ <tileset firstgid="7" source="sewer_tileset.tsx"/>
+ <layer name="regions" width="30" height="30">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+3OAQkAAAgDsIP9OxvjgluCJcAH0w4AAHDOAginqioQDgAA
+  </data>
+ </layer>
+ <layer name="input_set" width="30" height="30">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+3OAQ0AAAgDoNu/tDHuJiQgAT6YdgAAgHMWldTeShAOAAA=
+  </data>
+ </layer>
+ <layer name="output_ground" width="30" height="30">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+3OAQ0AAAgDoHeyfzdj3E1IQAJ8MO0AAADnLPcRGS4QDgAA
+  </data>
+ </layer>
+</map>

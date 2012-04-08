@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="20" height="15" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="tiles32" tilewidth="32" tileheight="32">
+  <image source="asset_dir/tiles32.png" width="256" height="256"/>
+ </tileset>
+ <tileset firstgid="65" name="building" tilewidth="32" tileheight="32">
+  <image source="asset_dir/building.png" width="256" height="256"/>
+ </tileset>
+ <layer name="background0" width="20" height="15">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUDDfggITtkTAMwPgwNYSAEg6MSx4GtIBYG0pjw/jkYPLIagAK+Qcc
+  </data>
+ </layer>
+ <layer name="foreground" width="20" height="15">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFtALhaHjUvJFlHqn2DHbz4tEwLnlaAgA7dBCB
+  </data>
+ </layer>
+ <layer name="set" width="20" height="15" visible="0">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFIBCOA4+aNzLMI9WeUfOIM0+LyhgAgTcggw==
+  </data>
+ </layer>
+</map>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="20" height="20" tilewidth="32" tileheight="32">
+ <properties>
+  <property name="DeleteTiles" value="true"/>
+ </properties>
+ <tileset firstgid="1" name="tiles32" tilewidth="32" tileheight="32">
+  <image source="../asset_dir/tiles32.png" width="256" height="256"/>
+ </tileset>
+ <tileset firstgid="65" name="building" tilewidth="32" tileheight="32">
+  <image source="../asset_dir/building.png" width="256" height="256"/>
+ </tileset>
+ <layer name="regions_input" width="20" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBj8gHGQm0dtwEiAHmjzqAkYGVDdQ4hNrJnINCFxegJS/UtMOJDq38EQDuQCaqURdDORaXQ2PjFK7CNW7UD5lxgAAKDwAD0=
+  </data>
+ </layer>
+ <layer name="regions_output" width="20" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBj8gHGgHUBnwEiAHk6AkUT2UAek+ne4hgO5YCDChtr5jxRzBntaAABGhAAZ
+  </data>
+ </layer>
+ <layer name="input_set" width="20" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBj8wITK5mlR2TxqAxMCNKnAF0qHQ+l0KB1LpnnUBrj8R66/tdBoGAhHowcKkOpfQuHgi0bDQDoaDQOxaPRQA7ZoNIxti0UtMQBbesFWRgiTaT464CZRPbX9iy29oKcdYgEAb8sLLg==
+  </data>
+ </layer>
+ <layer name="inputnot_set" width="20" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2DggAkOPi7xoQ5I9e9wDQdygS0B/nADg92/AEwpAv0=
+  </data>
+ </layer>
+ <layer name="output_background5" width="20" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBj8wGSgHUBnkESAHk7AGIlthsRORGJH08kt9AC4/EWq+EgFNkhsOyS2LQ3tZIbSwjS0AxfIQmLnILGz6e0QHAAASawHJA==
+  </data>
+ </layer>
+ <layer name="output_foreground" width="20" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUjIJRQC/APdAOoCIAAA8EAAw=
+  </data>
+ </layer>
+</map>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE map SYSTEM "http://mapeditor.org/dtd/1.0/map.dtd">
+<map version="1.0" orientation="orthogonal" width="20" height="15" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="tiles32" tilewidth="32" tileheight="32">
+  <image source="asset_dir/tiles32.png" width="256" height="256"/>
+ </tileset>
+ <tileset firstgid="65" name="building" tilewidth="32" tileheight="32">
+  <image source="asset_dir/building.png" width="256" height="256"/>
+ </tileset>
+ <layer name="set" width="20" height="15">
+  <data encoding="base64" compression="zlib">
+   eJxjZGBgYBwk2BeKqWWOL5Fm4lOLzSxam4dLDSnqyXXfUMPkuh+b/ykJD1zmkZtGSTWPHPdRGu7EmKdFZQwAMXgZKQ==
+  </data>
+ </layer>
+ <layer name="background" width="20" height="15">
+  <data encoding="base64" compression="zlib">
+   eJxjYCAPuEAxpcAFCyZFPSGzaG0eLjWkqCfXfUMNkOt+bP6nJDxwmUeMekJxSox55LgPF3AAYnsoRmYj85FpQmqUqIy1gVgLiUZnaxEhjowBinYctQ==
+  </data>
+ </layer>
+ <layer name="background2" width="20" height="15">
+  <data encoding="base64" compression="zlib">
+   eJxjYCAPuACxGxB7kKkf3RwfKHYnYCZMvTsWtS5I5iBjfObhU4vNLHQ16O7BptaDBPNwqUHG+NyPLk/Iv/QEoLByJVMfLIw9kMQIxS0ugC3s8YUHehyjpztc5uHyKylximweuYDYvECOefQGADUyIFo=
+  </data>
+ </layer>
+ <layer name="foreground" width="20" height="15">
+  <data encoding="base64" compression="zlib">
+   eJzjZmBg4B4k2BeKqWWOL5Fm4lOLzSxam4dLDSnqyXXfUMPkuh+b/ykJD1zmkZtGSTWPHPdRGu4DkX4ARYwe8Q==
+  </data>
+ </layer>
+ <layer name="background3" width="20" height="15">
+  <data encoding="base64" compression="zlib">
+   eJwTZmBgECYTu0IxufrRzXEl0kx8arGZRWvzcKkhRT257htqmFz3Y/M/JeGByzxy0yip5pHjPkrDfTikHwB17SPx
+  </data>
+ </layer>
+</map>

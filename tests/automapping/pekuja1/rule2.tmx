@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="15" height="15" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="tiles32" tilewidth="32" tileheight="32">
+  <image source="asset_dir/tiles32.png" width="256" height="256"/>
+ </tileset>
+ <tileset firstgid="65" name="building" tilewidth="32" tileheight="32">
+  <image source="asset_dir/building.png" width="256" height="256"/>
+ </tileset>
+ <layer name="regions_input" width="15" height="15">
+  <data encoding="base64" compression="zlib">
+   eJxjYKAMMELpdCQ2IxY2IwN1ASMONil8dLcR4uNzAzl8UsCof0m3h97+JRcAALgnAKM=
+  </data>
+ </layer>
+ <layer name="regions_output" width="15" height="15">
+  <data encoding="base64" compression="zlib">
+   eJxjZGBgYGSAABgNY6Pz0QGyGlL1UgLQ7UU3Hx+fEr0DBbC5k1rm0Mq/1HIztd0wGOMXAFmEACU=
+  </data>
+ </layer>
+ <layer name="input_set" width="15" height="15">
+  <data encoding="base64" compression="zlib">
+   eJxjYKAM+ELpdDTxdCQ6HYv8QIJYJHY4FCOz0fm4ALocIX4sA/kA3c3k2jtU/EuJvehy5PqXXgAAuf0PWQ==
+  </data>
+ </layer>
+ <layer name="inputnot_set" width="15" height="15" opacity="0.51">
+  <data encoding="base64" compression="zlib">
+   eJxjYKAeSEejaQlikdjhaHKE+ITEyVU32MFQ8m8sYSUEAaX+JTddkQoAIBoFnQ==
+  </data>
+ </layer>
+ <layer name="output_foreground" width="15" height="15">
+  <data encoding="base64" compression="zlib">
+   eJxjYCAOuOMQ94XSGWjiaUjsdCLtoBcIRWL7ocn5o/EDaOwWYkEslcwJQ+OHo/EjqGQPCKRS0SxyQRwaPx6Nn0And+ADADTYBfA=
+  </data>
+ </layer>
+ <layer name="output_background" width="15" height="15">
+  <data encoding="base64" compression="zlib">
+   eJxzYRh6wAUHexSMgqEIAG4CAM0=
+  </data>
+ </layer>
+ <layer name="output_background2" width="15" height="15">
+  <data encoding="base64" compression="zlib">
+   eJxjYMAOXIDYDYccDPiQKE5N4IpHzh2PXAgO9mAGMYPMHGJACh3twgUGgxuIAQDpqAPX
+  </data>
+ </layer>
+ <layer name="output_background3" width="15" height="15">
+  <data encoding="base64" compression="zlib">
+   eJxjYGBgcGWAAA+G4QmGq79GwfAAAKviANY=
+  </data>
+ </layer>
+</map>
