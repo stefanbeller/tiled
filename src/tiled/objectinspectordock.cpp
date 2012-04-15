@@ -46,7 +46,12 @@ ObjectInspectorDock::ObjectInspectorDock(QWidget *parent)
 
     //There should be a tooltip or something similar to inform
     //the user of the delete shortcut
+
+#if defined(Q_WS_MAC)
     QShortcut *deleteShortcut = new QShortcut(Qt::Key_Backspace, ui->properties);
+#else
+    QShortcut *deleteShortcut = new QShortcut(Qt::Key_Delete, ui->properties);
+#endif
 
     connect(deleteShortcut, SIGNAL(activated()),
             this, SLOT(deleteSelectedProperties()));
