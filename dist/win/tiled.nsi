@@ -45,6 +45,7 @@ RequestExecutionLevel admin
 ;-------------- Install Pages -------------
 !insertmacro MUI_PAGE_WELCOME
 !insertmacro MUI_PAGE_LICENSE ${ROOT_DIR}\dist\win\gpl-2.0.rtf
+!define MUI_PAGE_CUSTOMFUNCTION_PRE checkAlreadyInstalled
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
     ; These indented statements modify settings for MUI_PAGE_FINISH
@@ -136,24 +137,13 @@ Function checkAlreadyInstalled
 	ReadRegStr $R0 HKLM "SOFTWARE\${PRODUCT_REG_KEY}" "Version"
 	StrCmp $R0 "" 0 +2
 	Return
-	MessageBox MB_YESNO|MB_ICONQUESTION "${P} version $R0 seems \
-	to be already installed on your system.$\nWould you like to \
-	proceed with the installation of version ${V}?$\n Beware! This \
-	will uninstall the already installed instance first." IDYES UnInstall
-	MessageBox MB_OK|MB_ICONEXCLAMATION "Installation Canceled!"
+	MessageBox MB_OKCANCEL|MB_ICONQUESTION "${P} version $R0 seems \
+	to be installed on your system.$\n Multiple installations of ${P} \
+	are not possible at the moment.$\n$\n Overwrite current installation version?" \
+	IDCANCEL AbortInstallation
+	Abort
+	AbortInstallation:
 	Quit
-	UnInstall:
-        ClearErrors
-        ReadRegStr $R0 HKLM "${ADD_REMOVE}" "UninstallString"
-		DetailPrint "Uninstalling already installed instance first!"
-        ExecWait '$R0 _?=$INSTDIR'
-		IfErrors OnError 0
-		Return
-	OnError:
-		MessageBox MB_OK|MB_ICONSTOP "Error While Uinstalling already \
-		installed Software. Please uninstall it manually and start the \
-		installer again."
-		Quit
 FunctionEnd
 
 ;-------------- Uninstaller Functions -------------
@@ -163,7 +153,6 @@ FunctionEnd
 
 ;-------------- Installer -------------------------
 Section "" ; No components page, name is not important
-Call checkAlreadyInstalled
 
 SetOutPath $INSTDIR ; Set output path to the installation directory.
 WriteUninstaller $INSTDIR\uninstall.exe ; Location of the uninstaller
@@ -226,10 +215,11 @@ File /r /x .gitignore /x README /x README.txt ${ROOT_DIR}\util\*.*
 ; Shortcuts 
 CreateDirectory "$SMPROGRAMS\${P}"
 CreateShortCut  "$SMPROGRAMS\${P}\${P}.lnk" "$INSTDIR\${P_NORM}.exe"
+CreateShortCut  "$SMPROGRAMS\${P}\Automapping Rules Converter.lnk" "$INSTDIR\automappingconverter.exe"
 CreateShortCut  "$SMPROGRAMS\${P}\uninstall.lnk" "$INSTDIR\uninstall.exe"
 
 ; File associations
-${RegisterExtension} "$INSTDIR\${P_NORM}" ".tmx" "Tiled.tmx"
+${RegisterExtension} "$INSTDIR\${P_NORM}" ".tmx" "Tiled map file"
 
 ; Add version number to Registry
 WriteRegStr HKLM "Software\${PRODUCT_REG_KEY}" "Version" "${V}"
@@ -275,11 +265,12 @@ RMDir  $INSTDIR
 
 ; Removing shortcuts
 Delete "$SMPROGRAMS\${P}\${P}.lnk"
+Delete "$SMPROGRAMS\${P}\Automapping Rules Converter.lnk"
 Delete "$SMPROGRAMS\${P}\uninstall.lnk"
 RMDir  "$SMPROGRAMS\${P}"
 
 ; Removing file associations
-${UnRegisterExtension} ".tmx" "Tiled.tmx"
+${UnRegisterExtension} ".tmx" "Tiled map file"
 
 ; Remove Procut Registry Entries
 DeleteRegKey HKLM "Software\${PRODUCT_REG_KEY}"
