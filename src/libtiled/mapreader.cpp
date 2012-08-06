@@ -40,6 +40,7 @@
 #include "tilelayer.h"
 #include "tileset.h"
 #include "terrain.h"
+#include "colourlayer.h"
 
 #include <QCoreApplication>
 #include <QDebug>
@@ -105,6 +106,14 @@ private:
     ObjectGroup *readObjectGroup();
     MapObject *readObject();
     QPolygonF readPolygon();
+
+    ColourLayer *readColourLayer();
+    void readColourLayerData(ColourLayer *colourLayer);
+    void decodeBinaryColourLayerData(ColourLayer *colourLayer,
+                               const QStringRef &text,
+                               const QStringRef &compression);
+    void decodeCSVColourLayerData(ColourLayer *ColourLayer, const QString &text);
+
 
     Properties readProperties();
     void readProperty(Properties *properties);
@@ -231,6 +240,8 @@ Map *MapReaderPrivate::readMap()
             mMap->addLayer(readObjectGroup());
         else if (xml.name() == "imagelayer")
             mMap->addLayer(readImageLayer());
+        else if (xml.name() == "colour")
+            mMap->addLayer(readColourLayer());
         else
             readUnknownElement();
     }
@@ -892,4 +903,163 @@ Tileset *MapReader::readExternalTileset(const QString &source,
     if (!tileset)
         *error = reader.errorString();
     return tileset;
+}
+
+ColourLayer *MapReaderPrivate::readColourLayer()
+{
+    Q_ASSERT(xml.isStartElement() && xml.name() == "colour");
+
+    const QXmlStreamAttributes atts = xml.attributes();
+    const QString name = atts.value(QLatin1String("name")).toString();
+    const int x = atts.value(QLatin1String("x")).toString().toInt();
+    const int y = atts.value(QLatin1String("y")).toString().toInt();
+    const int width = atts.value(QLatin1String("width")).toString().toInt();
+    const int height = atts.value(QLatin1String("height")).toString().toInt();
+
+    ColourLayer *colourLayer = new ColourLayer(name, x, y, width, height);
+    readLayerAttributes(colourLayer, atts);
+
+    while (xml.readNextStartElement()) {
+        if (xml.name() == "properties")
+            colourLayer->mergeProperties(readProperties());
+        else if (xml.name() == "data")
+            readColourLayerData(colourLayer);
+        else
+            readUnknownElement();
+    }
+
+    return colourLayer;
+}
+
+void MapReaderPrivate::readColourLayerData(ColourLayer *colourLayer)
+{
+    Q_ASSERT(xml.isStartElement() && xml.name() == "data");
+
+    const QXmlStreamAttributes atts = xml.attributes();
+    QStringRef encoding = atts.value(QLatin1String("encoding"));
+    QStringRef compression = atts.value(QLatin1String("compression"));
+
+    int x = 0;
+    int y = 0;
+
+    while (xml.readNext() != QXmlStreamReader::Invalid) {
+        if (xml.isEndElement())
+            break;
+        else if (xml.isStartElement()) {
+            if (xml.name() == QLatin1String("tile")) {
+                if (y >= colourLayer->height()) {
+                    xml.raiseError(tr("Too many <colour> elements"));
+                    continue;
+                }
+
+                const QXmlStreamAttributes atts = xml.attributes();
+                int red = atts.value(QLatin1String("red")).toString().toInt();
+                int green = atts.value(QLatin1String("green")).toString().toInt();
+                int blue = atts.value(QLatin1String("blue")).toString().toInt();
+                int alpha = atts.value(QLatin1String("alpha")).toString().toInt();
+                colourLayer->setCell(x, y, QColor(red, green, blue, alpha));
+
+                x++;
+                if (x >= colourLayer->width()) {
+                    x = 0;
+                    y++;
+                }
+
+                xml.skipCurrentElement();
+            } else {
+                readUnknownElement();
+            }
+        } else if (xml.isCharacters() && !xml.isWhitespace()) {
+            if (encoding == QLatin1String("base64")) {
+                decodeBinaryColourLayerData(colourLayer,
+                                      xml.text(),
+                                      compression);
+            } else if (encoding == QLatin1String("csv")) {
+                decodeCSVColourLayerData(colourLayer, xml.text().toString());
+            } else {
+                xml.raiseError(tr("Unknown encoding: %1")
+                               .arg(encoding.toString()));
+                continue;
+            }
+        }
+    }
+}
+
+void MapReaderPrivate::decodeBinaryColourLayerData(ColourLayer *colourLayer,
+                                             const QStringRef &text,
+                                             const QStringRef &compression)
+{
+#if QT_VERSION < 0x040800
+    const QString textData = QString::fromRawData(text.unicode(), text.size());
+    const QByteArray latin1Text = textData.toLatin1();
+#else
+    const QByteArray latin1Text = text.toLatin1();
+#endif
+    QByteArray tileData = QByteArray::fromBase64(latin1Text);
+    const int size = (colourLayer->width() * colourLayer->height()) * 4;
+
+    if (compression == QLatin1String("zlib")
+        || compression == QLatin1String("gzip")) {
+        tileData = decompress(tileData, size);
+    } else if (!compression.isEmpty()) {
+        xml.raiseError(tr("Compression method '%1' not supported")
+                       .arg(compression.toString()));
+        return;
+    }
+
+    if (size != tileData.length()) {
+        xml.raiseError(tr("Corrupt layer data for layer '%1'")
+                       .arg(colourLayer->name()));
+        return;
+    }
+
+    const unsigned char *data =
+            reinterpret_cast<const unsigned char*>(tileData.constData());
+    int x = 0;
+    int y = 0;
+
+    for (int i = 0; i < size - 3; i += 4) {
+        const int red = data[i];
+        const int green = data[i + 1];
+        const int blue = data[i + 2];
+        const int alpha = data[i + 3];
+
+        colourLayer->setCell(x, y, QColor(red, green, blue, alpha));
+
+        x++;
+        if (x == colourLayer->width()) {
+            x = 0;
+            y++;
+        }
+    }
+}
+
+void MapReaderPrivate::decodeCSVColourLayerData(ColourLayer *colourLayer, const QString &text)
+{
+    QString trimText = text.trimmed();
+    QStringList tiles = trimText.split(QLatin1Char(','));
+
+    if (tiles.length() != colourLayer->width() * colourLayer->height() * 4) {
+        xml.raiseError(tr("Corrupt layer data for layer '%1'")
+                       .arg(colourLayer->name()));
+        return;
+    }
+
+    for (int y = 0; y < colourLayer->height(); y++) {
+        for (int x = 0; x < colourLayer->width(); x++) {
+            int colour[4];
+            for( int c=0; c<4; c++ ) {
+                bool conversionOk;
+                colour[c] = tiles.at((y * colourLayer->width() + x) * 4 + c)
+                        .toUInt(&conversionOk);
+                if (!conversionOk) {
+                    xml.raiseError(
+                            tr("Unable to parse tile at (%1,%2) on layer '%3'")
+                                   .arg(x + 1).arg(y + 1).arg(colourLayer->name()));
+                    return;
+                }
+            }
+            colourLayer->setCell(x, y, QColor(colour[0], colour[1], colour[2], colour[3]));
+        }
+    }
 }

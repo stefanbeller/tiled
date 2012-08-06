@@ -43,6 +43,7 @@ namespace Tiled {
 class Map;
 class ImageLayer;
 class ObjectGroup;
+class ColourLayer;
 class TileLayer;
 class Tileset;
 
@@ -56,6 +57,7 @@ public:
         TileLayerType   = 0x01,
         ObjectGroupType = 0x02,
         ImageLayerType  = 0x04,
+        ColourLayerType = 0x08,
         AnyLayerType    = 0xFF
     };
 
@@ -213,11 +215,13 @@ public:
     bool isTileLayer() const { return mType == TileLayerType; }
     bool isObjectGroup() const { return mType == ObjectGroupType; }
     bool isImageLayer() const { return mType == ImageLayerType; }
+    bool isColourLayer() const { return mType == ColourLayerType; }
 
     // These actually return this layer cast to one of its subclasses.
     TileLayer *asTileLayer();
     ObjectGroup *asObjectGroup();
     ImageLayer *asImageLayer();
+    ColourLayer *asColourLayer();
 
 protected:
     Layer *initializeClone(Layer *clone) const;

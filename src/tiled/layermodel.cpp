@@ -36,7 +36,8 @@ LayerModel::LayerModel(QObject *parent):
     mMap(0),
     mTileLayerIcon(QLatin1String(":/images/16x16/layer-tile.png")),
     mObjectGroupIcon(QLatin1String(":/images/16x16/layer-object.png")),
-    mImageLayerIcon(QLatin1String(":/images/16x16/layer-image.png"))
+    mImageLayerIcon(QLatin1String(":/images/16x16/layer-image.png")),
+    mColourLayerIcon(QLatin1String(":/images/16x16/layer-tile.png"))
 {
 }
 
@@ -64,6 +65,8 @@ QVariant LayerModel::data(const QModelIndex &index, int role) const
             return mObjectGroupIcon;
         else if (layer->isImageLayer())
             return mImageLayerIcon;
+        else if (layer->isColourLayer())
+            return mColourLayerIcon;
         else
             Q_ASSERT(false);
     case Qt::CheckStateRole:

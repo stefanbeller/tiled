@@ -55,6 +55,9 @@ public:
     void drawTileLayer(QPainter *painter, const TileLayer *layer,
                        const QRectF &exposed = QRectF()) const;
 
+    void drawColourLayer(QPainter *painter, const ColourLayer *layer,
+                       const QRectF &exposed = QRectF()) const;
+
     void drawTileSelection(QPainter *painter,
                            const QRegion &region,
                            const QColor &color,

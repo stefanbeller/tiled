@@ -40,6 +40,7 @@
 #include "tilelayer.h"
 #include "tileset.h"
 #include "terrain.h"
+#include "colourlayer.h"
 
 #include <QCoreApplication>
 #include <QDir>
@@ -75,6 +76,7 @@ private:
     void writeTileset(QXmlStreamWriter &w, const Tileset *tileset,
                       uint firstGid);
     void writeTileLayer(QXmlStreamWriter &w, const TileLayer *tileLayer);
+    void writeColourLayer(QXmlStreamWriter &w, const ColourLayer *colourLayer);
     void writeLayerAttributes(QXmlStreamWriter &w, const Layer *layer);
     void writeObjectGroup(QXmlStreamWriter &w, const ObjectGroup *objectGroup);
     void writeObject(QXmlStreamWriter &w, const MapObject *mapObject);
@@ -194,6 +196,8 @@ void MapWriterPrivate::writeMap(QXmlStreamWriter &w, const Map *map)
             writeObjectGroup(w, static_cast<const ObjectGroup*>(layer));
         else if (type == Layer::ImageLayerType)
             writeImageLayer(w, static_cast<const ImageLayer*>(layer));
+        else if (dynamic_cast<const ColourLayer*>(layer) != 0)
+            writeColourLayer(w, static_cast<const ColourLayer*>(layer));
     }
 
     w.writeEndElement();
@@ -411,6 +415,95 @@ void MapWriterPrivate::writeTileLayer(QXmlStreamWriter &w,
 
     w.writeEndElement(); // </data>
     w.writeEndElement(); // </layer>
+}
+
+void MapWriterPrivate::writeColourLayer(QXmlStreamWriter &w,
+                                      const ColourLayer *colourLayer)
+{
+    w.writeStartElement(QLatin1String("colour"));
+    writeLayerAttributes(w, colourLayer);
+    writeProperties(w, colourLayer->properties());
+
+    QString encoding;
+    QString compression;
+
+    if (mLayerDataFormat == MapWriter::Base64
+            || mLayerDataFormat == MapWriter::Base64Gzip
+            || mLayerDataFormat == MapWriter::Base64Zlib) {
+
+        encoding = QLatin1String("base64");
+
+        if (mLayerDataFormat == MapWriter::Base64Gzip)
+            compression = QLatin1String("gzip");
+        else if (mLayerDataFormat == MapWriter::Base64Zlib)
+            compression = QLatin1String("zlib");
+
+    } else if (mLayerDataFormat == MapWriter::CSV)
+        encoding = QLatin1String("csv");
+
+    w.writeStartElement(QLatin1String("data"));
+    if (!encoding.isEmpty())
+        w.writeAttribute(QLatin1String("encoding"), encoding);
+    if (!compression.isEmpty())
+        w.writeAttribute(QLatin1String("compression"), compression);
+
+    if (mLayerDataFormat == MapWriter::XML) {
+        for (int y = 0; y < colourLayer->height(); ++y) {
+            for (int x = 0; x < colourLayer->width(); ++x) {
+                const QColor colour = colourLayer->cellAt(x, y);
+                w.writeStartElement(QLatin1String("tile"));
+                w.writeAttribute(QLatin1String("red"), QString::number(colour.red()));
+                w.writeAttribute(QLatin1String("green"), QString::number(colour.green()));
+                w.writeAttribute(QLatin1String("blue"), QString::number(colour.blue()));
+                w.writeAttribute(QLatin1String("alpha"), QString::number(colour.alpha()));
+                w.writeEndElement();
+            }
+        }
+    } else if (mLayerDataFormat == MapWriter::CSV) {
+        QString tileData;
+
+        for (int y = 0; y < colourLayer->height(); ++y) {
+            for (int x = 0; x < colourLayer->width(); ++x) {
+                const QColor colour = colourLayer->cellAt(x, y);
+                tileData.append(QString::number(colour.red()));
+                tileData.append(QString::number(colour.green()));
+                tileData.append(QString::number(colour.blue()));
+                tileData.append(QString::number(colour.alpha()));
+                if (x != colourLayer->width() - 1
+                    || y != colourLayer->height() - 1)
+                    tileData.append(QLatin1String(","));
+            }
+            tileData.append(QLatin1String("\n"));
+        }
+
+        w.writeCharacters(QLatin1String("\n"));
+        w.writeCharacters(tileData);
+    } else {
+        QByteArray tileData;
+        tileData.reserve(colourLayer->height() * colourLayer->width() * 4);
+
+        for (int y = 0; y < colourLayer->height(); ++y) {
+            for (int x = 0; x < colourLayer->width(); ++x) {
+                const QColor colour = colourLayer->cellAt(x, y);
+                tileData.append((char) (colour.red()));
+                tileData.append((char) (colour.green()));
+                tileData.append((char) (colour.blue()));
+                tileData.append((char) (colour.alpha()));
+            }
+        }
+
+        if (mLayerDataFormat == MapWriter::Base64Gzip)
+            tileData = compress(tileData, Gzip);
+        else if (mLayerDataFormat == MapWriter::Base64Zlib)
+            tileData = compress(tileData, Zlib);
+
+        w.writeCharacters(QLatin1String("\n   "));
+        w.writeCharacters(QString::fromLatin1(tileData.toBase64()));
+        w.writeCharacters(QLatin1String("\n  "));
+    }
+
+    w.writeEndElement(); // </data>
+    w.writeEndElement(); // </colour>
 }
 
 void MapWriterPrivate::writeLayerAttributes(QXmlStreamWriter &w,

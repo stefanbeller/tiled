@@ -60,6 +60,7 @@ class MapView;
 class CommandButton;
 class ObjectsDock;
 class Zoomable;
+class ColourBrush;
 
 /**
  * The main editor window.
@@ -150,6 +151,7 @@ public slots:
     void rotateStampRight();
 
     void setStampBrush(const TileLayer *tiles);
+    void setColourBrush(const ColourLayer *colourLayer);
     void setTerrainBrush(const Terrain *terrain);
     void updateStatusInfoLabel(const QString &statusInfo);
 
@@ -158,6 +160,9 @@ public slots:
 
     void autoMappingError();
     void autoMappingWarning();
+
+    void selectColour();
+
 private:
     /**
       * Asks the user whether the current map should be saved when necessary.
@@ -221,6 +226,7 @@ private:
     StampBrush *mStampBrush;
     BucketFillTool *mBucketFillTool;
     TerrainBrush *mTerrainBrush;
+    ColourBrush *mColourBrush;
 
     ClipboardManager *mClipboardManager;
 

@@ -70,6 +70,9 @@ public:
                         const ImageLayer *layer,
                         const QRectF &exposed = QRectF()) const;
 
+    void drawColourLayer(QPainter *painter, const ColourLayer *layer,
+                       const QRectF &exposed = QRectF()) const {}
+
     using MapRenderer::pixelToTileCoords;
     QPointF pixelToTileCoords(qreal x, qreal y) const;
 

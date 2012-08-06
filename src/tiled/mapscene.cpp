@@ -39,6 +39,8 @@
 #include "imagelayeritem.h"
 #include "toolmanager.h"
 #include "tilesetmanager.h"
+#include "colourlayer.h"
+#include "colourlayeritem.h"
 
 #include <QGraphicsSceneMouseEvent>
 #include <QPainter>
@@ -201,6 +203,8 @@ QGraphicsItem *MapScene::createLayerItem(Layer *layer)
         layerItem = ogItem;
     } else if (ImageLayer *il = layer->asImageLayer()) {
         layerItem = new ImageLayerItem(il, mMapDocument->renderer());
+    } else if (ColourLayer *vc = dynamic_cast<ColourLayer*>(layer)) {
+        layerItem = new ColourLayerItem(vc, mMapDocument->renderer());
     }
 
     Q_ASSERT(layerItem);

@@ -40,6 +40,7 @@ class Map;
 class MapObject;
 class TileLayer;
 class ImageLayer;
+class ColourLayer;
 
 /**
  * This interface is used for rendering tile layers and retrieving associated
@@ -93,6 +94,15 @@ public:
      * only tiles that can be visible in this area will be drawn.
      */
     virtual void drawTileLayer(QPainter *painter, const TileLayer *layer,
+                               const QRectF &exposed = QRectF()) const = 0;
+
+    /**
+     * Draws the given \a layer using the given \a painter.
+     *
+     * Optionally, you can pass in the \a exposed rect (of pixels), so that
+     * only tiles that can be visible in this area will be drawn.
+     */
+    virtual void drawColourLayer(QPainter *painter, const ColourLayer *layer,
                                const QRectF &exposed = QRectF()) const = 0;
 
     /**

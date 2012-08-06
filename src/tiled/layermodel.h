@@ -144,6 +144,7 @@ private:
     QIcon mTileLayerIcon;
     QIcon mObjectGroupIcon;
     QIcon mImageLayerIcon;
+    QIcon mColourLayerIcon;
 };
 
 } // namespace Internal

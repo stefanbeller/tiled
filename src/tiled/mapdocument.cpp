@@ -34,6 +34,7 @@
 #include "mapobject.h"
 #include "movelayer.h"
 #include "objectgroup.h"
+#include "colourlayer.h"
 #include "offsetlayer.h"
 #include "orthogonalrenderer.h"
 #include "painttilelayer.h"
@@ -256,6 +257,10 @@ void MapDocument::addLayer(Layer::Type layerType)
     case Layer::ImageLayerType:
         name = tr("Image Layer %1").arg(mMap->imageLayerCount() + 1);
         layer = new ImageLayer(name, 0, 0, mMap->width(), mMap->height());
+        break;
+    case Layer::ColourLayerType:
+        name = tr("Colour Layer %1").arg(mMap->colourLayerCount() + 1);
+        layer = new ColourLayer(name, 0, 0, mMap->width(), mMap->height());
         break;
     case Layer::AnyLayerType:
         break; // Q_ASSERT below will fail.

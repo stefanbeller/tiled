@@ -164,6 +164,9 @@ public:
     int imageLayerCount() const
     { return layerCount(Layer::ImageLayerType); }
 
+    int colourLayerCount() const
+    { return layerCount(Layer::ColourLayerType); }
+
     /**
      * Returns the layer at the specified index.
      */

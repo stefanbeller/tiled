@@ -40,7 +40,8 @@ SOURCES += compression.cpp \
     staggeredrenderer.cpp \
     tilelayer.cpp \
     tileset.cpp \
-    gidmapper.cpp
+    gidmapper.cpp \
+    colourlayer.cpp
 HEADERS += compression.h \
     imagelayer.h \
     isometricrenderer.h \
@@ -60,8 +61,13 @@ HEADERS += compression.h \
     tilelayer.h \
     tileset.h \
     gidmapper.h \
-    terrain.h
+    terrain.h \
+    colourlayer.h
 macx {
     contains(QT_CONFIG, ppc):CONFIG += x86 \
         ppc
 }
+
+OTHER_FILES += \
+    Makefile \
+    libtiled.pri

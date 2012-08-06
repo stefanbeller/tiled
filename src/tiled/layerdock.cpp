@@ -31,6 +31,7 @@
 #include "propertiesdialog.h"
 #include "objectgrouppropertiesdialog.h"
 #include "objectgroup.h"
+#include "colourlayer.h"
 #include "utils.h"
 
 #include <QBoxLayout>
@@ -71,6 +72,7 @@ LayerDock::LayerDock(QWidget *parent):
     newLayerMenu->addAction(handler->actionAddTileLayer());
     newLayerMenu->addAction(handler->actionAddObjectGroup());
     newLayerMenu->addAction(handler->actionAddImageLayer());
+    newLayerMenu->addAction(handler->actionAddColourLayer());
 
     const QIcon newIcon(QLatin1String(":/images/16x16/document-new.png"));
     QToolButton *newLayerButton = new QToolButton;
@@ -270,6 +272,7 @@ void LayerView::contextMenuEvent(QContextMenuEvent *event)
     menu.addAction(handler->actionAddTileLayer());
     menu.addAction(handler->actionAddObjectGroup());
     menu.addAction(handler->actionAddImageLayer());
+    menu.addAction(handler->actionAddColourLayer());
 
     if (layerIndex >= 0) {
         menu.addAction(handler->actionDuplicateLayer());

@@ -137,7 +137,13 @@ SOURCES += aboutdialog.cpp \
     terrainbrush.cpp \
     terraindock.cpp \
     terrainview.cpp \
-    terrainmodel.cpp
+    terrainmodel.cpp \
+    colourbrush.cpp \
+    abstractcolourtool.cpp \
+    colourbrushitem.cpp \
+    paintcolourlayer.cpp \
+    colourpainter.cpp \
+    colourlayeritem.cpp
 
 HEADERS += aboutdialog.h \
     abstractobjecttool.h \
@@ -242,7 +248,13 @@ HEADERS += aboutdialog.h \
     terrainbrush.h \
     terraindock.h \
     terrainview.h \
-    terrainmodel.h
+    terrainmodel.h \
+    colourbrush.h \
+    abstracecolourtool.h \
+    colourbrushitem.h \
+    paintcolourlayer.h \
+    colourpainter.h \
+    colourlayeritem.h
 
 macx {
     OBJECTIVE_SOURCES += macsupport.mm

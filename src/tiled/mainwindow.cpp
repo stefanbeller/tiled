@@ -78,6 +78,7 @@
 #include "zoomable.h"
 #include "commandbutton.h"
 #include "objectsdock.h"
+#include "colourbrush.h"
 
 #ifdef Q_WS_MAC
 #include "macsupport.h"
@@ -98,6 +99,7 @@
 #include <QSignalMapper>
 #include <QShortcut>
 #include <QToolButton>
+#include <QColorDialog>
 
 using namespace Tiled;
 using namespace Tiled::Internal;
@@ -231,6 +233,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
     mLayerMenu->addAction(mActionHandler->actionAddTileLayer());
     mLayerMenu->addAction(mActionHandler->actionAddObjectGroup());
     mLayerMenu->addAction(mActionHandler->actionAddImageLayer());
+    mLayerMenu->addAction(mActionHandler->actionAddColourLayer());
     mLayerMenu->addAction(mActionHandler->actionDuplicateLayer());
     mLayerMenu->addAction(mActionHandler->actionMergeLayerDown());
     mLayerMenu->addAction(mActionHandler->actionRemoveLayer());
@@ -339,6 +342,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
             CreateObjectTool::CreatePolygon, this);
     CreateObjectTool *polylineObjectsTool = new CreateObjectTool(
             CreateObjectTool::CreatePolyline, this);
+    mColourBrush = new ColourBrush(this);
 
     connect(mTilesetDock, SIGNAL(currentTilesChanged(const TileLayer*)),
             this, SLOT(setStampBrush(const TileLayer*)));
@@ -355,6 +359,9 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
     connect(mRandomButton, SIGNAL(toggled(bool)),
             mBucketFillTool, SLOT(setRandom(bool)));
 
+    connect(mColourBrush, SIGNAL(currentTilesChanged(const ColourLayer*)),
+            this, SLOT(setColourBrush(const ColourLayer*)));
+
     ToolManager *toolManager = ToolManager::instance();
     toolManager->registerTool(mStampBrush);
     toolManager->registerTool(mTerrainBrush);
@@ -368,6 +375,8 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
     toolManager->registerTool(tileObjectsTool);
     toolManager->registerTool(polygonObjectsTool);
     toolManager->registerTool(polylineObjectsTool);
+    toolManager->addSeparator();
+    toolManager->registerTool(mColourBrush);
 
     addToolBar(toolManager->toolBar());
 
@@ -404,6 +413,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
     connect(switchToRightDocument1, SIGNAL(activated()),
             mDocumentManager, SLOT(switchToRightDocument()));
 
+    new QShortcut(tr("C"), this, SLOT(selectColour()));
     new QShortcut(tr("X"), this, SLOT(flipStampHorizontally()));
     new QShortcut(tr("Y"), this, SLOT(flipStampVertically()));
     new QShortcut(tr("Z"), this, SLOT(rotateStampRight()));
@@ -1295,6 +1305,11 @@ void MainWindow::flipStampHorizontally()
         stamp->flip(TileLayer::FlipHorizontally);
         setStampBrush(stamp);
     }
+    if (ColourLayer *stamp = mColourBrush->stamp()) {
+        stamp = static_cast<ColourLayer*>(stamp->clone());
+        stamp->flip(ColourLayer::FlipHorizontally);
+        setColourBrush(stamp);
+    }
 }
 
 void MainWindow::flipStampVertically()
@@ -1303,6 +1318,11 @@ void MainWindow::flipStampVertically()
         stamp = static_cast<TileLayer*>(stamp->clone());
         stamp->flip(TileLayer::FlipVertically);
         setStampBrush(stamp);
+    }
+    if (ColourLayer *stamp = mColourBrush->stamp()) {
+        stamp = static_cast<ColourLayer*>(stamp->clone());
+        stamp->flip(ColourLayer::FlipVertically);
+        setColourBrush(stamp);
     }
 }
 
@@ -1313,6 +1333,11 @@ void MainWindow::rotateStampLeft()
         stamp->rotate(TileLayer::RotateLeft);
         setStampBrush(stamp);
     }
+    if (ColourLayer *stamp = mColourBrush->stamp()) {
+        stamp = static_cast<ColourLayer*>(stamp->clone());
+        stamp->rotate(ColourLayer::RotateLeft);
+        setColourBrush(stamp);
+    }
 }
 
 void MainWindow::rotateStampRight()
@@ -1321,6 +1346,11 @@ void MainWindow::rotateStampRight()
         stamp = static_cast<TileLayer*>(stamp->clone());
         stamp->rotate(TileLayer::RotateRight);
         setStampBrush(stamp);
+    }
+    if (ColourLayer *stamp = mColourBrush->stamp()) {
+        stamp = static_cast<ColourLayer*>(stamp->clone());
+        stamp->rotate(ColourLayer::RotateRight);
+        setColourBrush(stamp);
     }
 }
 
@@ -1342,6 +1372,21 @@ void MainWindow::setStampBrush(const TileLayer *tiles)
     if (selectedTool != mStampBrush && selectedTool != mBucketFillTool)
         m->selectTool(mStampBrush);
 }
+
+void MainWindow::setColourBrush(const ColourLayer *colourLayer)
+{
+    if (!colourLayer)
+        return;
+
+    mColourBrush->setStamp(static_cast<ColourLayer*>(colourLayer->clone()));
+
+    // When selecting a new stamp, it makes sense to switch to a stamp tool
+    ToolManager *m = ToolManager::instance();
+    AbstractTool *selectedTool = m->selectedTool();
+    if (selectedTool != mColourBrush)
+        m->selectTool(mColourBrush);
+}
+
 
 /**
  * Sets the terrain brush.
@@ -1532,4 +1577,22 @@ void MainWindow::closeMapDocument(int index)
     mDocumentManager->switchToDocument(index);
     if (confirmSave())
         mDocumentManager->closeCurrentDocument();
+}
+
+void MainWindow::selectColour()
+{
+    if (ColourLayer *stamp = mColourBrush->stamp()) {
+        stamp = static_cast<ColourLayer*>(stamp->clone());
+
+        QColor oldColour = Qt::white;
+        if (!stamp->isEmpty())
+        {
+            oldColour = stamp->cellAt(0,0);
+        }
+
+        QColor newColour = QColorDialog::getColor(oldColour, this, QLatin1String("Select Color"), QColorDialog::ShowAlphaChannel);
+        stamp->fill(newColour);
+
+        setColourBrush(stamp);
+    }
 }

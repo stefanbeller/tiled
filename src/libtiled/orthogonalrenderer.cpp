@@ -34,6 +34,7 @@
 #include "tilelayer.h"
 #include "tileset.h"
 #include "imagelayer.h"
+#include "colourlayer.h"
 
 #include <cmath>
 
@@ -266,6 +267,51 @@ void OrthogonalRenderer::drawTileLayer(QPainter *painter,
             painter->setTransform(transform * baseTransform);
 
             painter->drawPixmap(0, 0, img);
+        }
+    }
+
+    painter->setTransform(savedTransform);
+}
+
+void OrthogonalRenderer::drawColourLayer(QPainter *painter,
+                                       const ColourLayer *layer,
+                                       const QRectF &exposed) const
+{
+    QTransform savedTransform = painter->transform();
+
+    const int tileWidth = map()->tileWidth();
+    const int tileHeight = map()->tileHeight();
+    const QPointF layerPos(layer->x() * tileWidth,
+                           layer->y() * tileHeight);
+
+    painter->translate(layerPos);
+
+    int startX = 0;
+    int startY = 0;
+    int endX = layer->width();
+    int endY = layer->height();
+
+    if (!exposed.isNull()) {
+        QRectF rect = exposed;
+
+        rect.translate(-layerPos);
+
+        startX = qMax((int) rect.x() / tileWidth, 0);
+        startY = qMax((int) rect.y() / tileHeight, 0);
+        endX = qMin((int) std::ceil(rect.right()) / tileWidth + 1, endX);
+        endY = qMin((int) std::ceil(rect.bottom()) / tileHeight + 1, endY);
+    }
+
+    for (int y = startY; y < endY; ++y) {
+        for (int x = startX; x < endX; ++x) {
+            const QColor cell = layer->cellAt(x, y);
+
+            qreal dx = x * tileWidth;
+            qreal dy = y * tileHeight;
+
+            const QRectF toFill = QRectF(dx, dy, tileWidth, tileHeight);
+            painter->fillRect(toFill, cell);
+
         }
     }
 

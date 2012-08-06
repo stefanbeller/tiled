@@ -57,6 +57,7 @@ MapDocumentActionHandler::MapDocumentActionHandler(QObject *parent)
     mActionAddTileLayer = new QAction(this);
     mActionAddObjectGroup = new QAction(this);
     mActionAddImageLayer = new QAction(this);
+    mActionAddColourLayer = new QAction(this);
 
     mActionDuplicateLayer = new QAction(this);
     mActionDuplicateLayer->setShortcut(tr("Ctrl+Shift+D"));
@@ -110,6 +111,8 @@ MapDocumentActionHandler::MapDocumentActionHandler(QObject *parent)
     connect(mActionAddObjectGroup, SIGNAL(triggered()),
             SLOT(addObjectGroup()));
     connect(mActionAddImageLayer, SIGNAL(triggered()), SLOT(addImageLayer()));
+    connect(mActionAddColourLayer, SIGNAL(triggered()),
+            SLOT(addColourLayer()));
     connect(mActionDuplicateLayer, SIGNAL(triggered()),
             SLOT(duplicateLayer()));
     connect(mActionMergeLayerDown, SIGNAL(triggered()),
@@ -142,6 +145,7 @@ void MapDocumentActionHandler::retranslateUi()
     mActionAddTileLayer->setText(tr("Add &Tile Layer"));
     mActionAddObjectGroup->setText(tr("Add &Object Layer"));
     mActionAddImageLayer->setText(tr("Add &Image Layer"));
+    mActionAddColourLayer->setText(tr("Add &Colour Layer"));
     mActionDuplicateLayer->setText(tr("&Duplicate Layer"));
     mActionMergeLayerDown->setText(tr("&Merge Layer Down"));
     mActionRemoveLayer->setText(tr("&Remove Layer"));
@@ -251,6 +255,12 @@ void MapDocumentActionHandler::addImageLayer()
          mMapDocument->addLayer(Layer::ImageLayerType);
 }
 
+void MapDocumentActionHandler::addColourLayer()
+{
+    if (mMapDocument)
+        mMapDocument->addLayer(Layer::ColourLayerType);
+}
+
 void MapDocumentActionHandler::duplicateLayer()
 {
     if (mMapDocument)
@@ -338,6 +348,7 @@ void MapDocumentActionHandler::updateActions()
     mActionAddTileLayer->setEnabled(map);
     mActionAddObjectGroup->setEnabled(map);
     mActionAddImageLayer->setEnabled(map);
+    mActionAddColourLayer->setEnabled(map);
 
     const int layerCount = map ? map->layerCount() : 0;
     const bool hasPreviousLayer = currentLayerIndex >= 0
