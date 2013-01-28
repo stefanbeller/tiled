@@ -288,6 +288,12 @@ public:
      */
     void markTerrainDistancesDirty() { mTerrainDistancesDirty = true; }
 
+    bool updateTime(int passedTime);
+
+    int duration();
+
+    bool checkForAnimations();
+
 private:
     /**
      * Detaches from the external image. Should be called everytime the tileset
