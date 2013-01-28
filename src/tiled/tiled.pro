@@ -265,7 +265,6 @@ FORMS += aboutdialog.ui \
     mainwindow.ui \
     newmapdialog.ui \
     newtilesetdialog.ui \
-    newimagelayerdialog.ui \
     objectinspectordock.ui \
     objectpropertiesdialog.ui \
     offsetmapdialog.ui \
