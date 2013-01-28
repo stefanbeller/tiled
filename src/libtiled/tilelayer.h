@@ -34,6 +34,7 @@
 
 #include "layer.h"
 
+#include <QList>
 #include <QMargins>
 #include <QString>
 #include <QVector>
