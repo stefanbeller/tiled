@@ -1,0 +1,27 @@
+PriorityBranches=(
+	"difftool"
+	"animation"
+	"networking"
+	"stt_master"
+	"malazar_objectinspector"
+)
+
+#	"MegaJiXiang/master"
+#	"stt/master"
+#	"malazar/objectinspector"
+
+#72807c3 Merge remote-tracking branch 'louiz/layeroffset' into testing
+
+
+#5a7ff20 Merge branch 'tileobjectdrawingoffset' into testing
+#89f0821 Merge remote-tracking branch 'upstream/master'
+#31096b4 Merge branch 'colourlayer' of https://github.com/stefanbeller/tiled
+#3310099 Merge remote-tracking branch 'upstream/master' into layeroffset
+
+
+
+
+#6d63a27 Merge remote-tracking branch 'louiz/layeroffset' into testing
+#37bd501 Merge branch 'malazar_objectinspector' into testing
+#caa4d37 Merge branch 'stt_master' into testing
+#94e4633 Merge branch 'difftool' into testing
