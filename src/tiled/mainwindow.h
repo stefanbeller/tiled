@@ -96,6 +96,14 @@ public:
      */
     void openLastFiles();
 
+signals:
+    /**
+     * Communication to remotemapsynchronizer is done only via signals/slots,
+     * since that is an easy to use threadsafe way.
+     */
+    void remoteRequestProject(QString);
+    void remoteRequestMap(QString);
+
 public slots:
     bool openFile(const QString &fileName);
 
@@ -112,6 +120,7 @@ protected:
 public slots:
     void newMap();
     void openFile();
+    void connectToServer();
     bool saveFile();
     bool saveFileAs();
     void saveAsImage();
@@ -162,6 +171,8 @@ public slots:
     void autoMappingError();
     void autoMappingWarning();
 
+    void addMapDocument(MapDocument *mapDocument);
+
 private:
     /**
       * Asks the user whether the current map should be saved when necessary.
@@ -191,7 +202,7 @@ private:
     void writeSettings();
     void readSettings();
 
-    void addMapDocument(MapDocument *mapDocument);
+
     QStringList recentFiles() const;
     QString fileDialogStartLocation() const;
 

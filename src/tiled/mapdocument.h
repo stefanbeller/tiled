@@ -50,6 +50,7 @@ class LayerModel;
 class MapObjectModel;
 class TerrainModel;
 class TileSelectionModel;
+class RemoteMapSynchronizer;
 
 /**
  * Represents an editable map. The purpose of this class is to make sure that
@@ -69,7 +70,8 @@ public:
      * Constructs a map document around the given map. The map document takes
      * ownership of the map.
      */
-    MapDocument(Map *map, const QString &fileName = QString());
+    MapDocument(Map *map, const QString &fileName = QString(),
+                RemoteMapSynchronizer *remoteMapSynchronizer = 0);
 
     /**
      * Destructor.
@@ -341,6 +343,7 @@ private:
     MapObjectModel *mMapObjectModel;
     TerrainModel *mTerrainModel;
     QUndoStack *mUndoStack;
+    RemoteMapSynchronizer *mRemoteMapSynchronizer;
 };
 
 } // namespace Internal

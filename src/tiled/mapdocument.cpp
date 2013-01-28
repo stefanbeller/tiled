@@ -38,6 +38,7 @@
 #include "orthogonalrenderer.h"
 #include "painttilelayer.h"
 #include "pluginmanager.h"
+#include "remotemapsynchronizer.h"
 #include "resizelayer.h"
 #include "resizemap.h"
 #include "staggeredrenderer.h"
@@ -56,13 +57,16 @@
 using namespace Tiled;
 using namespace Tiled::Internal;
 
-MapDocument::MapDocument(Map *map, const QString &fileName):
+MapDocument::MapDocument(Map *map
+                         , const QString &fileName
+                         , RemoteMapSynchronizer *remoteMapSynchronizer):
     mFileName(fileName),
     mMap(map),
     mLayerModel(new LayerModel(this)),
     mMapObjectModel(new MapObjectModel(this)),
     mTerrainModel(new TerrainModel(this, this)),
-    mUndoStack(new QUndoStack(this))
+    mUndoStack(new QUndoStack(this)),
+    mRemoteMapSynchronizer(remoteMapSynchronizer)
 {
     switch (map->orientation()) {
     case Map::Isometric:
