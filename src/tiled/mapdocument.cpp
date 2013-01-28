@@ -102,6 +102,16 @@ MapDocument::MapDocument(Map *map, const QString &fileName):
     // Register tileset references
     TilesetManager *tilesetManager = TilesetManager::instance();
     tilesetManager->addReferences(mMap->tilesets());
+
+    connect(this, SIGNAL(regionChanged(QRegion)),
+            this, SLOT(updateAnimatedTilesRegion(QRegion)));
+
+    updateAnimatedTilesRegion(QRect(QPoint(0, 0), mMap->size()));
+}
+
+void MapDocument::emitRepaintAnimatedRegion()
+{
+    emit repaintAnimatedRegion(mAnimatedTilesRegion);
 }
 
 MapDocument::~MapDocument()
@@ -563,3 +573,39 @@ void MapDocument::setTilesetName(Tileset *tileset, const QString &name)
     tileset->setName(name);
     emit tilesetNameChanged(tileset);
 }
+
+void MapDocument::updateAnimatedTilesRegion(QRegion region)
+{
+    if (region.isEmpty())
+        return;
+
+    QRegion animated;
+
+    foreach (Layer *layer, mMap->layers()) {
+        TileLayer *tl = layer->asTileLayer();
+        if (tl) {
+            const QRegion area = region.intersected(tl->region());
+            foreach (const QRect &rect, area.rects())
+                for (int y = rect.top(); y <= rect.bottom(); ++y) {
+                    for (int x = rect.left(); x <= rect.right(); ++x) {
+                        if (tl->cellAt(x, y).tile->isAnimated()) {
+                            const int rangeStart = x;
+                            for (++x; x <= rect.right() + 1; ++x) {
+                                if (x > rect.right() ||
+                                        !tl->cellAt(x, y).tile->isAnimated()) {
+                                    const int rangeEnd = x;
+                                    const QRect r(rangeStart, y,
+                                                  rangeEnd - rangeStart, 1);
+                                    animated += r;
+                                }
+                            }
+                        }
+                    }
+                }
+        }
+    }
+    mAnimatedTilesRegion -= region;
+    mAnimatedTilesRegion += animated;
+}
+
+

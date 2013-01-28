@@ -30,6 +30,7 @@
 #include "tileset.h"
 #include "tile.h"
 #include "terrain.h"
+#include <limits>
 
 #include <QBitmap>
 
@@ -323,4 +324,32 @@ void Tileset::updateTileSize()
     }
     mTileWidth = maxWidth;
     mTileHeight = maxHeight;
+}
+
+bool Tileset::updateTime(int passedTime)
+{
+    bool ret = false;
+    foreach (Tile *tile, mTiles)
+        ret |= tile->updateTime(passedTime);
+    return ret;
+}
+
+int Tileset::duration()
+{
+    int ret = std::numeric_limits<int>::max();
+    foreach (Tile *tile, mTiles) {
+        const int duration = tile->duration();
+        if (duration < ret)
+            ret = duration;
+    }
+    return ret;
+}
+
+bool Tileset::checkForAnimations()
+{
+    bool ret = false;
+    foreach (Tile *tile, mTiles) {
+        ret |= tile->checkForAnimationSequence();
+    }
+    return ret;
 }

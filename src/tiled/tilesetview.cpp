@@ -576,6 +576,7 @@ void TilesetView::editTileProperties()
                                       mMapDocument->undoStack(),
                                       this);
     propertiesDialog.exec();
+    tile->checkForAnimationSequence();
 }
 
 void TilesetView::setDrawGrid(bool drawGrid)

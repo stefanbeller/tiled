@@ -1,6 +1,7 @@
 /*
  * tile.cpp
  * Copyright 2012, Thorbjørn Lindeijer <thorbjorn@lindeijer.nl>
+ * Copyright 2012, Stefan Beller <stefanbeller@googlemail.com>
  *
  * This file is part of libtiled.
  *
@@ -29,6 +30,7 @@
 #include "tile.h"
 
 #include "tileset.h"
+#include <limits>
 
 using namespace Tiled;
 
@@ -45,3 +47,58 @@ void Tile::setTerrain(unsigned terrain)
     mTerrain = terrain;
     mTileset->markTerrainDistancesDirty();
 }
+
+const QPixmap &Tile::image() const
+{
+    if (!mIsAnimated) {
+        return mImage;
+    } else {
+        return *mFrames[mCurrentFrameIndex];
+    }
+}
+
+int Tile::duration()
+{
+    if (mIsAnimated)
+        return mDuration;
+    else
+        return std::numeric_limits<int>::max();
+}
+
+bool Tile::updateTime(int timePassed)
+{
+    if (!mIsAnimated)
+        return false;
+
+    bool changedImage = false;
+
+    mDuration -= timePassed;
+    while (mDuration <= 0) {
+        mCurrentFrameIndex = (mCurrentFrameIndex + 1) % mFrames.size();
+        mDuration += mDurations[mCurrentFrameIndex];
+        changedImage = true;
+    }
+    return changedImage;
+}
+
+bool Tile::checkForAnimationSequence()
+{
+    mIsAnimated = false;
+    for (int i = 0; ;i++) {
+        const QString frameName = QLatin1String("animation-frame") + QString::number(i);
+        const QString delayName = QLatin1String("animation-delay") + QString::number(i);
+
+        if (properties().contains(frameName) && properties().contains(delayName)) {
+            int frame = property(frameName).toInt();
+            int delay = property(delayName).toInt();
+            mFrames.append(&mTileset->tileAt(frame)->mImage);
+            mDurations.append(delay);
+            mIsAnimated = true;
+        } else {
+            break;
+        }
+    }
+    return mIsAnimated;
+}
+
+

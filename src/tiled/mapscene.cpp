@@ -112,6 +112,8 @@ void MapScene::setMapDocument(MapDocument *mapDocument)
 
         connect(mMapDocument, SIGNAL(mapChanged()),
                 this, SLOT(mapChanged()));
+        connect(mMapDocument, SIGNAL(repaintAnimatedRegion(QRegion)),
+                this, SLOT(repaintRegion(QRegion)));
         connect(mMapDocument, SIGNAL(regionChanged(QRegion)),
                 this, SLOT(repaintRegion(QRegion)));
         connect(mMapDocument, SIGNAL(layerAdded(int)),
