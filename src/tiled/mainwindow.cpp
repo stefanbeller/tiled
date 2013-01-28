@@ -34,6 +34,7 @@
 #include "addremovetileset.h"
 #include "clipboardmanager.h"
 #include "createobjecttool.h"
+#include "connecttoserverdialog.h"
 #include "diffdock.h"
 #include "documentmanager.h"
 #include "editpolygontool.h"
@@ -64,7 +65,9 @@
 #include "preferences.h"
 #include "preferencesdialog.h"
 #include "quickstampmanager.h"
+#include "remotemapsynchronizer.h"
 #include "saveasimagedialog.h"
+#include "selectfromlistdialog.h"
 #include "stampbrush.h"
 #include "terrainbrush.h"
 #include "tilelayer.h"
@@ -275,6 +278,8 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
     connect(mUi->actionOpen, SIGNAL(triggered()), SLOT(openFile()));
     connect(mUi->actionClearRecentFiles, SIGNAL(triggered()),
             SLOT(clearRecentFiles()));
+    connect(mUi->actionConnectToServer, SIGNAL(triggered()),
+            SLOT(connectToServer()));
     connect(mUi->actionSave, SIGNAL(triggered()), SLOT(saveFile()));
     connect(mUi->actionSaveAs, SIGNAL(triggered()), SLOT(saveFileAs()));
     connect(mUi->actionSaveAsImage, SIGNAL(triggered()), SLOT(saveAsImage()));
@@ -452,9 +457,9 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
             this, SLOT(autoMappingWarning()));
     connect(AutomappingManager::instance(), SIGNAL(errorsOccurred()),
             this, SLOT(autoMappingError()));
-
     connect(mDiffDock, SIGNAL(addMapDocument(MapDocument*)),
             this, SLOT(addMapDocument(MapDocument*)));
+    qRegisterMetaType<TiledMessage>("TiledMessage");
 }
 
 MainWindow::~MainWindow()
@@ -706,6 +711,42 @@ void MainWindow::openFile()
     mSettings.setValue(QLatin1String("lastUsedOpenFilter"), selectedFilter);
     foreach (const QString &fileName, fileNames)
         openFile(fileName, mapReader);
+}
+
+void MainWindow::connectToServer()
+{
+    QString server;
+    int port;
+
+    // connecting to which server?
+    ConnectToServerDialog connectToServerDialog(this);
+    connectToServerDialog.getConnection(server, port);
+
+    // ok connect to that server
+    RemoteMapSynchronizer *r = new RemoteMapSynchronizer();
+    connect(r, SIGNAL(newMapDocument(MapDocument*)),
+            this, SLOT(addMapDocument(MapDocument*)));
+
+    // which project do you want?
+    SelectFromListDialog selectProject(this);
+    connect(r, SIGNAL(listOfProjects(QStringList)),
+            &selectProject, SLOT(setStrings(QStringList)));
+
+    r->connectToServer(server, port);
+
+    SelectFromListDialog selectMap(this);
+    connect(this, SIGNAL(remoteRequestProject(QString)),
+                         r, SLOT(remoteRequestProject(QString)));
+    connect(this, SIGNAL(remoteRequestMap(QString)),
+                         r, SLOT(remoteRequestMap(QString)));
+    connect(r, SIGNAL(listOfMaps(QStringList)),
+                         &selectMap, SLOT(setStrings(QStringList)));
+
+    QString project = selectProject.getSelection();
+    emit remoteRequestProject(project);
+
+    QString map = selectMap.getSelection();
+    emit remoteRequestMap(map);
 }
 
 bool MainWindow::saveFile(const QString &fileName)

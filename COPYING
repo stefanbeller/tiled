@@ -6,6 +6,7 @@ Software        Directory                 License
 -----------------------------------------------------------------
 Tiled           src/tiled                 GPL
 libtiled        src/libtiled              Simplified BSD license
+server          src/server                GPL
 tmxviewer       src/tmxviewer             Simplified BSD license
 libtiled-java   util/java/libtiled-java   Simplified BSD license
 tmxviewer-java  util/java/tmxviewer-java  Simplified BSD license

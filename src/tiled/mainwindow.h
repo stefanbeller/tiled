@@ -97,6 +97,14 @@ public:
      */
     void openLastFiles();
 
+signals:
+    /**
+     * Communication to remotemapsynchronizer is done only via signals/slots,
+     * since that is an easy to use threadsafe way.
+     */
+    void remoteRequestProject(QString);
+    void remoteRequestMap(QString);
+
 public slots:
     bool openFile(const QString &fileName);
 
@@ -113,6 +121,7 @@ protected:
 public slots:
     void newMap();
     void openFile();
+    void connectToServer();
     bool saveFile();
     bool saveFileAs();
     void saveAsImage();

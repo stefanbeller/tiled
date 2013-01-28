@@ -15,7 +15,7 @@ greaterThan(QT_MAJOR_VERSION, 4) {
     QT += widgets
 }
 contains(QT_CONFIG, opengl): QT += opengl
-
+QT += network
 DEFINES += QT_NO_CAST_FROM_ASCII \
     QT_NO_CAST_TO_ASCII
 
@@ -139,6 +139,10 @@ SOURCES += aboutdialog.cpp \
     tilesetmanager.cpp \
     tilesetmodel.cpp \
     tilesetview.cpp \
+    remotemapsynchronizer.cpp \
+    connecttoserverdialog.cpp \
+    protocol.cpp \
+    selectfromlistdialog.cpp \
     tmxmapreader.cpp \
     tmxmapwriter.cpp \
     toolmanager.cpp \
@@ -171,6 +175,7 @@ HEADERS += aboutdialog.h \
     changetileterrain.h \
     clipboardmanager.h \
     colorbutton.h \
+    connecttoserverdialog.h \
     commandbutton.h \
     commanddatamodel.h \
     commanddialog.h \
@@ -225,15 +230,18 @@ HEADERS += aboutdialog.h \
     propertiesdialog.h \
     propertiesmodel.h \
     propertiesview.h \
+    protocol.h \
     quickstampmanager.h \
     rangeset.h \
     renamelayer.h \
+    remotemapsynchronizer.h \
     resizedialog.h \
     resizehelper.h \
     resizelayer.h \
     resizemap.h \
     resizemapobject.h \
     saveasimagedialog.h \
+    selectfromlistdialog.h \
     selectionrectangle.h \
     stampbrush.h \
     terrainbrush.h \
@@ -262,6 +270,7 @@ macx {
 }
 
 FORMS += aboutdialog.ui \
+    connecttoserverdialog.ui \
     commanddialog.ui \
     mainwindow.ui \
     newmapdialog.ui \
@@ -271,8 +280,9 @@ FORMS += aboutdialog.ui \
     preferencesdialog.ui \
     propertiesdialog.ui \
     resizedialog.ui \
-    saveasimagedialog.ui\
-    editterraindialog.ui
+    saveasimagedialog.ui \
+    editterraindialog.ui \
+    selectfromlistdialog.ui
 
 images.path = $${PREFIX}/share/tiled/images
 images.files += images/tiled-icon-32.png

@@ -32,7 +32,7 @@
      <x>0</x>
      <y>0</y>
      <width>553</width>
-     <height>23</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -52,6 +52,8 @@
     <addaction name="actionNew"/>
     <addaction name="actionOpen"/>
     <addaction name="menuRecentFiles"/>
+    <addaction name="separator"/>
+    <addaction name="actionConnectToServer"/>
     <addaction name="separator"/>
     <addaction name="actionSave"/>
     <addaction name="actionSaveAs"/>
@@ -419,6 +421,14 @@
    </property>
    <property name="text">
     <string>Show Tile Object &amp;Outlines</string>
+   </property>
+  </action>
+  <action name="actionConnectToServer">
+   <property name="text">
+    <string>Connect to Server...</string>
+   </property>
+   <property name="toolTip">
+    <string>Collaborative working over network</string>
    </property>
   </action>
  </widget>
