@@ -174,6 +174,7 @@ TilesetDock::TilesetDock(QWidget *parent):
     mPropertiesTileset(new QAction(this)),
     mDeleteTileset(new QAction(this)),
     mRenameTileset(new QAction(this)),
+    mRelocateTileset(new QAction(this)),
     mEditTerrain(new QAction(this)),
     mTilesetMenuButton(new TilesetMenuButton(this)),
     mTilesetMenu(new QMenu(this)),
@@ -213,6 +214,7 @@ TilesetDock::TilesetDock(QWidget *parent):
     mPropertiesTileset->setIcon(QIcon(QLatin1String(":images/16x16/document-properties.png")));
     mDeleteTileset->setIcon(QIcon(QLatin1String(":images/16x16/edit-delete.png")));
     mRenameTileset->setIcon(QIcon(QLatin1String(":images/16x16/edit-rename.png")));
+    mRelocateTileset->setIcon(QIcon(QLatin1String(":images/16x16/edit-rename.png")));
     mEditTerrain->setIcon(QIcon(QLatin1String(":images/16x16/terrain.png")));
 
     Utils::setThemeIcon(mImportTileset, "document-import");
@@ -220,6 +222,8 @@ TilesetDock::TilesetDock(QWidget *parent):
     Utils::setThemeIcon(mPropertiesTileset, "document-properties");
     Utils::setThemeIcon(mDeleteTileset, "edit-delete");
     Utils::setThemeIcon(mRenameTileset, "edit-rename");
+    Utils::setThemeIcon(mRelocateTileset, "edit-rename");
+
 
     connect(mImportTileset, SIGNAL(triggered()),
             SLOT(importTileset()));
@@ -231,6 +235,8 @@ TilesetDock::TilesetDock(QWidget *parent):
             SLOT(removeTileset()));
     connect(mRenameTileset, SIGNAL(triggered()),
             SLOT(renameTileset()));
+    connect(mRelocateTileset, SIGNAL(triggered()),
+            SLOT(relocateTileset()));
     connect(mEditTerrain, SIGNAL(triggered()),
             SLOT(editTerrain()));
 
@@ -240,6 +246,7 @@ TilesetDock::TilesetDock(QWidget *parent):
     mToolBar->addAction(mPropertiesTileset);
     mToolBar->addAction(mDeleteTileset);
     mToolBar->addAction(mRenameTileset);
+    mToolBar->addAction(mRelocateTileset);
     mToolBar->addAction(mEditTerrain);
 
     mZoomable = new Zoomable(this);
@@ -396,6 +403,7 @@ void TilesetDock::updateActions()
     }
 
     mRenameTileset->setEnabled(view && !external);
+    mRelocateTileset->setEnabled(view && !external);
     mImportTileset->setEnabled(view && external);
     mExportTileset->setEnabled(view && !external);
     mPropertiesTileset->setEnabled(view && !external);
@@ -612,6 +620,7 @@ void TilesetDock::retranslateUi()
     mPropertiesTileset->setText(tr("Tile&set Properties"));
     mDeleteTileset->setText(tr("&Remove Tileset"));
     mRenameTileset->setText(tr("Rena&me Tileset"));
+    mRelocateTileset->setText(tr("Re&locate Tileset"));
     mEditTerrain->setText(tr("Edit &Terrain Information"));
 }
 
@@ -702,6 +711,21 @@ void TilesetDock::renameTileset()
                                             currentTileset(),
                                             newText);
     mMapDocument->undoStack()->push(name);
+}
+
+
+void TilesetDock::relocateTileset()
+{
+    Tileset *tileset = currentTileset();
+    if (!tileset)
+        return;
+
+    const QString filter = Utils::readableImageFormatsFilter();
+    QString f = QFileDialog::getOpenFileName(this, tr("Tileset Image"), tileset->imageSource(),
+                                             filter);
+
+    if (!f.isEmpty())
+        tileset->loadFromImage(QImage(f), f);
 }
 
 void TilesetDock::editTerrain()
