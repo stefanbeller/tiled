@@ -21,6 +21,7 @@
 
 #include "tilesetmanager.h"
 
+#include "animationmanager.h"
 #include "filesystemwatcher.h"
 #include "tileset.h"
 
@@ -96,6 +97,10 @@ void TilesetManager::addReference(Tileset *tileset)
     if (mTilesets.contains(tileset)) {
         mTilesets[tileset]++;
     } else {
+        bool isAnimated = tileset->checkForAnimations();
+        if (isAnimated)
+            AnimationManager::instance()->addTileset(tileset);
+
         mTilesets.insert(tileset, 1);
         if (!tileset->imageSource().isEmpty())
             mWatcher->addPath(tileset->imageSource());
@@ -112,6 +117,7 @@ void TilesetManager::removeReference(Tileset *tileset)
         if (!tileset->imageSource().isEmpty())
             mWatcher->removePath(tileset->imageSource());
 
+        AnimationManager::instance()->removeTileset(tileset);
         delete tileset;
     }
 }

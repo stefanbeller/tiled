@@ -58,7 +58,10 @@ public:
         mTileset(tileset),
         mImage(image),
         mTerrain(-1),
-        mTerrainProbability(-1.f)
+        mTerrainProbability(-1.f),
+        mIsAnimated(false),
+        mDuration(0),
+        mCurrentFrameIndex(0)
     {}
 
     /**
@@ -74,7 +77,7 @@ public:
     /**
      * Returns the image of this tile.
      */
-    const QPixmap &image() const { return mImage; }
+    const QPixmap &image() const;
 
     /**
      * Sets the image of this tile.
@@ -132,12 +135,36 @@ public:
      */
     void setTerrainProbability(float probability) { mTerrainProbability = probability; }
 
+    bool isAnimated() const { return mIsAnimated; }
+
+    /**
+     * Only for animated tiles:
+     * The duration in milliseconds until the next frame shows up,
+     * if this tile is animated
+     */
+    int duration();
+
+    /**
+     * decreases the time counter until the next frame is shown
+     * returns if the image has changed.
+     */
+    bool updateTime(int timePassed);
+
+    bool checkForAnimationSequence();
+
 private:
     int mId;
     Tileset *mTileset;
     QPixmap mImage;
     unsigned mTerrain;
     float mTerrainProbability;
+
+    bool mIsAnimated;
+    int mDuration;
+    int mCurrentFrameIndex;
+    QList<QPixmap*> mFrames;
+    QList<int> mDurations;
+
 };
 
 } // namespace Tiled

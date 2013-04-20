@@ -238,6 +238,9 @@ public:
     void emitEditLayerNameRequested();
     void emitEditCurrentObject();
 
+public slots:
+    void emitRepaintAnimatedRegion();
+
 signals:
     void fileNameChanged();
     void modifiedChanged();
@@ -279,6 +282,12 @@ signals:
      * Emitted when the current layer index changes.
      */
     void currentLayerIndexChanged(int index);
+
+
+    /**
+     * Emitted when animated tiles change its image.
+     */
+    void repaintAnimatedRegion(const QRegion &region);
 
     /**
      * Emitted when a certain region of the map changes. The region is given in
@@ -334,6 +343,7 @@ private slots:
     void onLayerAdded(int index);
     void onLayerAboutToBeRemoved(int index);
     void onLayerRemoved(int index);
+    void updateAnimatedTilesRegion(QRegion);
 
     void onTerrainRemoved(Terrain *terrain);
 
@@ -361,6 +371,7 @@ private:
     MapObjectModel *mMapObjectModel;
     TerrainModel *mTerrainModel;
     QUndoStack *mUndoStack;
+    QRegion mAnimatedTilesRegion;
 };
 
 /**
